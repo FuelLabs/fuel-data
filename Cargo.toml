@@ -1,0 +1,59 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/*",
+]
+
+[workspace.package]
+authors = ["Fuel Labs <contact@fuel.sh>"]
+keywords = [ "blockchain", "crypto"]
+edition = "2021"
+homepage = "https://fuel.network/"
+license = "BUSL-1.1"
+repository = "https://github.com/fuellabs/fuel-data"
+rust-version = "1.81.0"
+version = "0.0.1"
+
+[workspace.dependencies]
+anyhow = "1.0"
+async-nats = "0.38"
+assert_matches = "1.5.0"
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4.5", features = ["derive", "env"] }
+dotenvy = "0.15"
+displaydoc = "0.2"
+futures = "0.3"
+fuel-core-bin = { version = "0.40.2", default-features = false, features = [
+    "p2p",
+    "relayer",
+    "rocksdb",
+] }
+fuel-core = { version = "0.40.2", default-features = false, features = [
+    "p2p",
+    "relayer",
+    "rocksdb",
+] }
+fuel-core-client = { version = "0.40.2", default-features = false, features = ["std"] }
+fuel-core-importer = { version = "0.40.2" }
+fuel-core-storage = { version = "0.40.2" }
+fuel-core-types = { version = "0.40.2", default-features = false, features = ["std", "serde"] }
+fuel-core-services = { version = "0.40.2", default-features = false, features = ["test-helpers"] }
+futures-util = "0.3"
+hex = "0.4"
+mockall = "0.13"
+mockall_double = "0.3.1"
+pretty_assertions = "1.4"
+rand = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+rayon = "1.10.0"
+serde_json = "1.0"
+sha2 = "0.10"
+strum = "0.26"
+strum_macros = "0.26"
+tokio = { version = "1.41", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+thiserror = "2.0"
+
+

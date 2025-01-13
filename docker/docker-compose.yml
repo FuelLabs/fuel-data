@@ -1,0 +1,31 @@
+services:
+  nats:
+    image: nats:latest
+    container_name: nats
+    restart: always
+    ports:
+      - 4222:4222
+      - 8222:8222
+      - 8443:8443
+    volumes:
+      - ./crates/fuel-data-publisher/nats.conf:/etc/nats/nats.conf
+    command: [-m, '8222', --name=fuel-core-nats-server, --js, --config=/etc/nats/nats.conf, -D]
+    env_file:
+      - ./../.env
+  s3:
+    image: localstack/localstack:latest
+    container_name: localstack
+    restart: always
+    ports:
+      - "4566:4566"  # LocalStack main gateway port
+      - "4572:4572"  # S3 service port (optional)
+    environment:
+      - SERVICES=s3  # Enable just S3 service
+      - DEBUG=1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - DEFAULT_REGION=us-east-1
+      - DEFAULT_BUCKETS=fuel-streams-local
+    volumes:
+      - ./localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
