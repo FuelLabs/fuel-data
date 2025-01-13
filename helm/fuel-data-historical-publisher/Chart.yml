@@ -1,6 +1,6 @@
 apiVersion: v2
-name: fuel-data-publisher
-description: A Helm chart for Kubernetes deployment of the Fuel Data Publisher
+name: fuel-data-historical-publisher
+description: A Helm chart for Kubernetes deployment of the Fuel Data Historical Publisher
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives

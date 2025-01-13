@@ -1,9 +1,9 @@
-# Default values for fuel-data-publisher
+# Default values for fuel-data-historical-publisher
 
 replicaCount: 1
 
 image:
-  repository: ghcr.io/fuellabs/fuel-data-publisher
+  repository: ghcr.io/fuellabs/fuel-data-historical-publisher
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

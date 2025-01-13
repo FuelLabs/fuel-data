@@ -38,7 +38,7 @@ RUN \
     --mount=type=cache,target=/usr/local/cargo/registry/cache \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/build/target \
-    xx-cargo chef cook --release --no-default-features -p fuel-data-publisher --recipe-path recipe.json
+    xx-cargo chef cook --release --no-default-features -p fuel-data-historical-publisher --recipe-path recipe.json
 # Up to this point, if our dependency tree stays the same,
 # all layers should be cached.
 COPY . .
@@ -48,10 +48,10 @@ RUN \
     --mount=type=cache,target=/usr/local/cargo/registry/cache \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/build/target \
-    xx-cargo build --release --no-default-features -p fuel-data-publisher \
-    && xx-verify ./target/$(xx-cargo --print-target-triple)/release/fuel-data-publisher \
-    && cp ./target/$(xx-cargo --print-target-triple)/release/fuel-data-publisher /root/fuel-data-publisher \
-    && cp ./target/$(xx-cargo --print-target-triple)/release/fuel-data-publisher.d /root/fuel-data-publisher.d
+    xx-cargo build --release --no-default-features -p fuel-data-historical-publisher \
+    && xx-verify ./target/$(xx-cargo --print-target-triple)/release/fuel-data-historical-publisher \
+    && cp ./target/$(xx-cargo --print-target-triple)/release/fuel-data-historical-publisher /root/fuel-data-historical-publisher \
+    && cp ./target/$(xx-cargo --print-target-triple)/release/fuel-data-historical-publisher.d /root/fuel-data-historical-publisher.d
 
 # Stage 2: Run
 FROM ubuntu:22.04 AS run
@@ -96,8 +96,8 @@ RUN apt-get update -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /root/fuel-data-publisher .
-COPY --from=builder /root/fuel-data-publisher.d .
+COPY --from=builder /root/fuel-data-historical-publisher .
+COPY --from=builder /root/fuel-data-historical-publisher.d .
 
 COPY /cluster/chain-config ./chain-config
 EXPOSE ${PORT}
@@ -107,7 +107,7 @@ EXPOSE ${TELEMETRY_PORT}
 # https://stackoverflow.com/a/44671685
 # https://stackoverflow.com/a/40454758
 # hadolint ignore=DL3025
-CMD exec ./fuel-data-publisher \
+CMD exec ./fuel-data-historical-publisher \
     --service-name "${SERVICE_NAME}" \
     --nats-url $NATS_URL \
     --keypair $KEYPAIR \
