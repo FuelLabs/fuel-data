@@ -210,7 +210,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NATS_URL: nats://127.0.0.1:4222
-      NATS_ADMIN_PASS: secret
+      NATS_PUBLISHER_PASSWORD: secret
       NATS_PUBLIC_PASS: secret
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
@@ -296,7 +296,7 @@ jobs:
             build_on_pr: false
         exclude:
           - is_release: false
-            platform: {build_on_pr: false}
+            platform: { build_on_pr: false }
     steps:
       - uses: actions/checkout@v4
 

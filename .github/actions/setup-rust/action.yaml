@@ -21,7 +21,7 @@ runs:
     - name: Create .env file with NATS environment variables
       shell: bash
       run: |
-        echo "NATS_ADMIN_PASS=${NATS_ADMIN_PASS:-default_pass}" >> .env
+        echo "NATS_PUBLISHER_PASSWORD=${NATS_PUBLISHER_PASSWORD:-default_pass}" >> .env
         echo "NATS_PUBLIC_PASS=${NATS_PUBLIC_PASS:-temp-public-pass}" >> .env
 
     - name: Install Rust
