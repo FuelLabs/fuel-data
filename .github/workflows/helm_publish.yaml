@@ -1,21 +1,21 @@
 name: Build and Publish Helm Chart
 
-on:
-  workflow_dispatch:
-    inputs:
-      chart:
-        description: "Select the Helm chart to deploy"
-        required: true
-        type: choice
-        options:
-          - fuel-data-publisher
-          - fuel-streams
-  push:
-    branches:
-      - main
-    paths:
-      - cluster/charts/fuel-data-publisher/Chart.yaml
-      - cluster/charts/fuel-streams/Chart.yaml
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       chart:
+#         description: "Select the Helm chart to deploy"
+#         required: true
+#         type: choice
+#         options:
+#           - fuel-data-publisher
+#           - fuel-streams
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - cluster/charts/fuel-data-publisher/Chart.yaml
+#       - cluster/charts/fuel-streams/Chart.yaml
 
 permissions:
   contents: read

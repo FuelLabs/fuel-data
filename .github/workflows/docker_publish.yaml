@@ -1,23 +1,23 @@
 name: Build and publish Docker image
 
-on:
-  workflow_dispatch:
-    inputs:
-      image_type:
-        description: "Choose which image to build (publisher/webserver/both)"
-        required: true
-        type: choice
-        options:
-          - publisher
-          - webserver
-          - both
-        default: "both"
-  push:
-    branches:
-      - main
-  release:
-    types:
-      - published
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       image_type:
+#         description: "Choose which image to build (publisher/webserver/both)"
+#         required: true
+#         type: choice
+#         options:
+#           - publisher
+#           - webserver
+#           - both
+#         default: "both"
+#   push:
+#     branches:
+#       - main
+#   release:
+#     types:
+#       - published
 
 permissions:
   contents: read

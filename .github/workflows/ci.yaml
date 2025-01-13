@@ -1,16 +1,16 @@
 name: CI
 
-on:
-  workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - edited
-      - reopened
-  push:
-    branches:
-      - main
+# on:
+#   workflow_dispatch:
+#   pull_request:
+#     types:
+#       - opened
+#       - synchronize
+#       - edited
+#       - reopened
+#   push:
+#     branches:
+#       - main
 
 env:
   CARGO_TERM_COLOR: always
