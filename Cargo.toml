@@ -64,3 +64,5 @@ thiserror = "2.0"
 
 # Workspace members
 fuel-core-interfacing = { path = "crates/fuel-core-interfacing" }
+fuel-core-interfacing-types = { path = "crates/fuel-core-interfacing-types" }
+fuel-data-nats = { path = "crates/fuel-data-nats" }
