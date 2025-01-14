@@ -19,7 +19,7 @@ use fuel_core_types::{
 };
 use tokio::sync::broadcast::Receiver;
 
-use crate::fuel_core_types::*;
+use fuel_core_interfacing_types::*;
 
 pub type OffchainDatabase =
     GenericDatabase<IterableKeyValueViewWrapper<fuel_core::fuel_core_graphql_api::storage::Column>>;

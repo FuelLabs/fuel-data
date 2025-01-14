@@ -1,6 +1,10 @@
-/// FuelCore Types
-/// Allows flexilibity of aggregating and transforming them for different payload types
-pub use fuel_core_client::client::schema::Tai64Timestamp as FuelCoreTai64Timestamp;
+use fuel_core::state::{
+    generic_database::GenericDatabase, iterable_key_value_view::IterableKeyValueViewWrapper,
+};
+pub use fuel_core_client::client::{
+    schema::Tai64Timestamp as FuelCoreTai64Timestamp,
+    types::TransactionStatus as FuelCoreClientTransactionStatus,
+};
 pub use fuel_core_importer::ImporterResult as FuelCoreImporterResult;
 pub use fuel_core_types::{
     blockchain::{
@@ -13,6 +17,7 @@ pub use fuel_core_types::{
         primitives::BlockId as FuelCoreBlockId,
         SealedBlock as FuelCoreSealedBlock,
     },
+    fuel_asm::Word as FuelCoreWord,
     fuel_crypto::Signature as FuelCoreSignature,
     fuel_tx::{
         field::{Inputs as FuelCoreInputs, Outputs as FuelCoreOutputs},
@@ -22,10 +27,11 @@ pub use fuel_core_types::{
         Address as FuelCoreAddress, AssetId as FuelCoreAssetId, BlobId as FuelCoreBlobId,
         Bytes32 as FuelCoreBytes32, Contract as FuelCoreContract, ContractId as FuelCoreContractId,
         Input as FuelCoreInput, MessageId as FuelCoreMessageId, Output as FuelCoreOutput,
-        Receipt as FuelCoreReceipt, StorageSlot as FuelCoreStorageSlot,
+        PanicInstruction as FuelCorePanicInstruction, Receipt as FuelCoreReceipt,
+        ScriptExecutionResult as FuelCoreScriptExecutionResult, StorageSlot as FuelCoreStorageSlot,
         Transaction as FuelCoreTransaction, TxId as FuelCoreTxId, TxPointer as FuelCoreTxPointer,
         UniqueIdentifier as FuelCoreUniqueIdentifier, UpgradePurpose as FuelCoreUpgradePurpose,
-        UtxoId as FuelCoreUtxoId, Word as FuelCoreWord,
+        UtxoId as FuelCoreUtxoId,
     },
     fuel_types::{BlockHeight as FuelCoreBlockHeight, ChainId as FuelCoreChainId},
     services::{
@@ -36,3 +42,6 @@ pub use fuel_core_types::{
     },
     tai64::Tai64 as FuelCoreTai64,
 };
+
+pub type FuelCoreOffchainDatabase =
+    GenericDatabase<IterableKeyValueViewWrapper<fuel_core::fuel_core_graphql_api::storage::Column>>;
