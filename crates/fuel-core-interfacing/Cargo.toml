@@ -28,7 +28,6 @@ fuel-core-importer = { workspace = true }
 fuel-core-services = { workspace = true }
 fuel-core-storage = { workspace = true }
 fuel-core-types = { workspace = true }
-fuel-core-interfacing-types = { workspace = true }
 futures = { workspace = true }
 num_cpus = "1.16"
 parking_lot = { version = "0.12", features = ["serde"] }
@@ -49,3 +48,5 @@ url = "2.5"
 [features]
 default = ["all"]
 types = []
+all = ["types"]
+test-helpers = ["all"]
