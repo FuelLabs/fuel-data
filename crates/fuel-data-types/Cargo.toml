@@ -1,16 +1,13 @@
 [package]
-name = "fuel-data-primitives"
-description = "Primitive types for fuel data operations"
-authors = { workspace = true }
-keywords = { workspace = true }
-edition = { workspace = true }
-homepage = { workspace = true }
-license = { workspace = true }
-repository = { workspace = true }
-version = { workspace = true }
-rust-version = { workspace = true }
-publish = false
-
+name = "fuel-data-types"
+authors.workspace = true
+keywords.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
 
 [dependencies]
 fuel-core = { workspace = true, default-features = false, features = [
@@ -27,6 +24,6 @@ fuel-core-types = { workspace = true, default-features = false, features = [
     "std",
     "serde",
 ] }
-fuel-core-interfacing-types = { workspace = true }
+fuel-node = { workspace = true, features = ["types"] }
 hex = { workspace = true }
 serde = { workspace = true }

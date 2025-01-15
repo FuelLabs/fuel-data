@@ -1,4 +1,4 @@
-use fuel_core_interfacing_types::*;
+use fuel_node::types::*;
 
 #[derive(
     Debug,
@@ -14,12 +14,12 @@ use fuel_core_interfacing_types::*;
     serde::Serialize,
 )]
 pub struct TxPointer {
-    block_height: FuelCoreBlockHeight,
+    block_height: FuelNodeBlockHeight,
     tx_index: u16,
 }
 
-impl From<FuelCoreTxPointer> for TxPointer {
-    fn from(value: FuelCoreTxPointer) -> Self {
+impl From<FuelNodeTxPointer> for TxPointer {
+    fn from(value: FuelNodeTxPointer) -> Self {
         Self {
             block_height: value.block_height(),
             tx_index: value.tx_index(),

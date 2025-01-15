@@ -1,5 +1,5 @@
-use fuel_core_interfacing_types::*;
 use fuel_core_types::fuel_types;
+use fuel_node::types::*;
 
 use super::{LongBytes, UtxoId};
 use crate::{generate_byte_type_wrapper, impl_bytes32_to_type, impl_from_type_to_bytes32};
@@ -46,8 +46,8 @@ impl_from_type_to_bytes32!(fuel_types::ContractId);
 impl_from_type_to_bytes32!(fuel_types::AssetId);
 impl_from_type_to_bytes32!(fuel_types::Address);
 
-impl From<FuelCoreBlockId> for BlockId {
-    fn from(value: FuelCoreBlockId) -> Self {
-        Self(FuelCoreBytes32::from(value))
+impl From<FuelNodeBlockId> for BlockId {
+    fn from(value: FuelNodeBlockId) -> Self {
+        Self(FuelNodeBytes32::from(value))
     }
 }

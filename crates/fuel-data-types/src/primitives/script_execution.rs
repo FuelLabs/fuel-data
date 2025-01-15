@@ -1,13 +1,13 @@
-use fuel_core_interfacing_types::*;
 use fuel_core_types::{fuel_asm::RawInstruction, fuel_tx::PanicReason};
+use fuel_node::types::*;
 
 #[derive(Debug, Default, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct PanicInstruction {
     pub reason: PanicReason,
     pub instruction: RawInstruction,
 }
-impl From<FuelCorePanicInstruction> for PanicInstruction {
-    fn from(value: FuelCorePanicInstruction) -> Self {
+impl From<FuelNodePanicInstruction> for PanicInstruction {
+    fn from(value: FuelNodePanicInstruction) -> Self {
         Self {
             reason: value.reason().to_owned(),
             instruction: value.instruction().to_owned(),
@@ -28,13 +28,13 @@ pub enum ScriptExecutionResult {
     #[default]
     Unknown,
 }
-impl From<FuelCoreScriptExecutionResult> for ScriptExecutionResult {
-    fn from(value: FuelCoreScriptExecutionResult) -> Self {
+impl From<FuelNodeScriptExecutionResult> for ScriptExecutionResult {
+    fn from(value: FuelNodeScriptExecutionResult) -> Self {
         match value {
-            FuelCoreScriptExecutionResult::Success => Self::Success,
-            FuelCoreScriptExecutionResult::Revert => Self::Revert,
-            FuelCoreScriptExecutionResult::Panic => Self::Panic,
-            FuelCoreScriptExecutionResult::GenericFailure(value) => Self::GenericFailure(value),
+            FuelNodeScriptExecutionResult::Success => Self::Success,
+            FuelNodeScriptExecutionResult::Revert => Self::Revert,
+            FuelNodeScriptExecutionResult::Panic => Self::Panic,
+            FuelNodeScriptExecutionResult::GenericFailure(value) => Self::GenericFailure(value),
         }
     }
 }
