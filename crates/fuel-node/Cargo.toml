@@ -1,6 +1,6 @@
 [package]
-name = "fuel-core-interfacing"
-description = "Adapters and Interfaces used for integrating fuel client node i.e. wrapping FuelLabs/fuel-core"
+name = "fuel-node"
+description = "Adapters and Interfaces used for integrating Fuel client node"
 authors = { workspace = true }
 keywords = { workspace = true }
 edition = { workspace = true }

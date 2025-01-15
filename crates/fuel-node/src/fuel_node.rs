@@ -9,21 +9,21 @@ use fuel_core::{
 use fuel_core_bin::FuelService;
 use tokio::{sync::broadcast::Receiver, time::sleep};
 
-use crate::fuel_core_like::FuelCoreLike;
-use crate::fuel_core_types::*;
+use crate::fuel_node_like::FuelNodeLike;
+use crate::fuel_node_types::*;
 
 pub type OffchainDatabase =
     GenericDatabase<IterableKeyValueViewWrapper<fuel_core::fuel_core_graphql_api::storage::Column>>;
 
 #[derive(Clone)]
-pub struct FuelCore {
+pub struct FuelNode {
     pub fuel_service: Arc<FuelService>,
-    chain_id: FuelCoreChainId,
-    base_asset_id: FuelCoreAssetId,
+    chain_id: FuelNodeChainId,
+    base_asset_id: FuelNodeAssetId,
     database: CombinedDatabase,
 }
 
-impl From<FuelService> for FuelCore {
+impl From<FuelService> for FuelNode {
     fn from(fuel_service: FuelService) -> Self {
         let chain_config = fuel_service.shared.config.snapshot_reader.chain_config();
         let chain_id = chain_config.consensus_parameters.chain_id();
@@ -40,7 +40,7 @@ impl From<FuelService> for FuelCore {
     }
 }
 
-impl FuelCore {
+impl FuelNode {
     pub async fn new(command: fuel_core_bin::cli::run::Command) -> anyhow::Result<Arc<Self>> {
         let fuel_service = fuel_core_bin::cli::run::get_service(command).await?;
 
@@ -54,7 +54,7 @@ impl FuelCore {
 }
 
 #[async_trait::async_trait]
-impl FuelCoreLike for FuelCore {
+impl FuelNodeLike for FuelNode {
     async fn start(&self) -> anyhow::Result<()> {
         fuel_core_bin::cli::init_logging();
 
@@ -96,7 +96,7 @@ impl FuelCoreLike for FuelCore {
         }
     }
 
-    async fn await_offchain_db_sync(&self, block_id: &FuelCoreBlockId) -> anyhow::Result<()> {
+    async fn await_offchain_db_sync(&self, block_id: &FuelNodeBlockId) -> anyhow::Result<()> {
         loop {
             if self
                 .offchain_database()?
@@ -112,10 +112,10 @@ impl FuelCoreLike for FuelCore {
         Ok(())
     }
 
-    fn base_asset_id(&self) -> &FuelCoreAssetId {
+    fn base_asset_id(&self) -> &FuelNodeAssetId {
         &self.base_asset_id
     }
-    fn chain_id(&self) -> &FuelCoreChainId {
+    fn chain_id(&self) -> &FuelNodeChainId {
         &self.chain_id
     }
 
@@ -133,14 +133,14 @@ impl FuelCoreLike for FuelCore {
 
     fn get_receipts(
         &self,
-        tx_id: &FuelCoreBytes32,
-    ) -> anyhow::Result<Option<Vec<FuelCoreReceipt>>> {
+        tx_id: &FuelNodeBytes32,
+    ) -> anyhow::Result<Option<Vec<FuelNodeReceipt>>> {
         let receipts = self
             .offchain_database()?
             .get_tx_status(tx_id)?
             .map(|status| match &status {
-                FuelCoreTransactionStatus::Success { receipts, .. }
-                | FuelCoreTransactionStatus::Failed { receipts, .. } => Some(receipts.clone()),
+                FuelNodeTransactionStatus::Success { receipts, .. }
+                | FuelNodeTransactionStatus::Failed { receipts, .. } => Some(receipts.clone()),
                 _ => None,
             })
             .unwrap_or_default();
