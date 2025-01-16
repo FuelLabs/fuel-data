@@ -1,14 +1,25 @@
 services:
-  nats:
+  live-publisher-nats:
     image: nats:latest
-    container_name: nats
     restart: always
     ports:
       - 4222:4222
       - 8222:8222
       - 8443:8443
     volumes:
-      - ../crates/fuel-data-publishing/nats.conf:/etc/nats/nats.conf
-    command: [-m, '8222', --name=fuel-core-nats-server, --js, --config=/etc/nats/nats.conf, -D]
+      - ../crates/fuel-data-live-publisher/nats.conf:/etc/nats/nats.conf
+    command: [-m, '8222', --js, --config=/etc/nats/nats.conf, -D]
+    env_file:
+      - ./../.env
+  historical-publisher-nats:
+    image: nats:latest
+    restart: always
+    ports:
+      - 4223:4222
+      - 8223:8222
+      - 8444:8443
+    volumes:
+      - ../crates/fuel-data-historical-publisher/nats.conf:/etc/nats/nats.conf
+    command: [-m, '8222', --js, --config=/etc/nats/nats.conf, -D]
     env_file:
       - ./../.env
