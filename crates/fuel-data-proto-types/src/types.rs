@@ -1,3 +1,3 @@
-mod blocks;
+pub mod block;
 
-pub use blocks::*;
+pub use block::*;

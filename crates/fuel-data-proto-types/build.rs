@@ -3,7 +3,7 @@ fn main() {
         protoc_bin_vendored::protoc_bin_path().expect("Failed to find protoc binary");
     std::env::set_var("PROTOC", protoc_bin_path);
 
-    let proto_files = ["src/protos/blocks.proto"];
+    let proto_files = ["src/protos/block.proto"];
     let includes = ["src/protos"];
 
     prost_build::Config::new()
