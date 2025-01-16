@@ -16,16 +16,12 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(
-        block: &fuel_core_types::blockchain::block::Block,
-        consensus: Consensus,
-        transaction_ids: Vec<Bytes32>,
-    ) -> Self {
+    pub fn new(block: &FuelNodeBlock, consensus: Consensus, transaction_ids: Vec<Bytes32>) -> Self {
         let header: BlockHeader = block.header().into();
         let height = header.height;
 
         let version = match block {
-            fuel_core_types::blockchain::block::Block::V1(_) => BlockVersion::V1,
+            FuelNodeBlock::V1(_) => BlockVersion::V1,
         };
 
         Self {
@@ -36,28 +32,6 @@ impl Block {
             transaction_ids,
             version,
         }
-    }
-}
-
-#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
-pub struct BlockHeight(String);
-
-impl From<FuelNodeBlockHeight> for BlockHeight {
-    fn from(value: FuelNodeBlockHeight) -> Self {
-        let height = *value;
-        BlockHeight(height.to_string())
-    }
-}
-
-impl From<u32> for BlockHeight {
-    fn from(value: u32) -> Self {
-        BlockHeight::from(FuelNodeBlockHeight::from(value))
-    }
-}
-
-impl std::fmt::Display for BlockHeight {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
     }
 }
 
