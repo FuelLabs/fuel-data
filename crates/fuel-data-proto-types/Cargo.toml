@@ -1,5 +1,5 @@
 [package]
-name = "fuel-data-protos"
+name = "fuel-data-proto-types"
 authors.workspace = true
 keywords.workspace = true
 edition.workspace = true

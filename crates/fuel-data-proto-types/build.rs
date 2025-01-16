@@ -7,7 +7,7 @@ fn main() {
     let includes = ["src/protos"];
 
     prost_build::Config::new()
-        .out_dir("src/protos")
+        .out_dir("src/generated-types")
         .compile_protos(&proto_files, &includes)
         .expect("Failed to compile Protobuf files");
 }
