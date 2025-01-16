@@ -1,7 +1,10 @@
 use serde::{Deserialize, Serialize};
 
-use super::primitives::*;
+use fuel_data_proto_types::block::*;
+
 use fuel_node::types::*;
+
+use crate::primitives::*;
 
 // Block type
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -35,12 +38,63 @@ impl Block {
     }
 }
 
+impl From<BlockProto> for Block {
+    fn from(proto: BlockProto) -> Self {
+        let consensus = proto
+            .consensus
+            .map(Consensus::from)
+            .expect("Consensus is required in BlockProto");
+
+        let header = proto
+            .header
+            .map(BlockHeader::from)
+            .expect("Header is required in BlockProto");
+
+        let transaction_ids = proto
+            .transaction_ids
+            .into_iter()
+            .map(Bytes32::from)
+            .collect();
+
+        let version = match proto.version {
+            0 => BlockVersion::V1,
+            _ => panic!("Unknown BlockVersionProto"),
+        };
+
+        Self {
+            consensus,
+            header,
+            height: proto.height,
+            id: proto
+                .id
+                .map(BlockId::from)
+                .expect("BlockId is required in BlockProto"),
+            transaction_ids,
+            version,
+        }
+    }
+}
+
 // Consensus enum
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "type")]
 pub enum Consensus {
     Genesis(Genesis),
     PoAConsensus(PoAConsensus),
+}
+
+impl From<ConsensusProto> for Consensus {
+    fn from(proto: ConsensusProto) -> Self {
+        match proto.consensus_type {
+            Some(consensus_proto::ConsensusType::Genesis(genesis_proto)) => {
+                Consensus::Genesis(Genesis::from(genesis_proto))
+            }
+            Some(consensus_proto::ConsensusType::PoaConsensus(poa_proto)) => {
+                Consensus::PoAConsensus(PoAConsensus::from(poa_proto))
+            }
+            None => panic!("Unknown consensus type in ConsensusProto"),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -65,6 +119,33 @@ impl From<FuelNodeGenesis> for Genesis {
     }
 }
 
+impl From<GenesisProto> for Genesis {
+    fn from(proto: GenesisProto) -> Self {
+        Self {
+            chain_config_hash: proto
+                .chain_config_hash
+                .map(Bytes32::from)
+                .expect("Chain config hash is required in GenesisProto"),
+            coins_root: proto
+                .coins_root
+                .map(Bytes32::from)
+                .expect("Coins root is required in GenesisProto"),
+            contracts_root: proto
+                .contracts_root
+                .map(Bytes32::from)
+                .expect("Contracts root is required in GenesisProto"),
+            messages_root: proto
+                .messages_root
+                .map(Bytes32::from)
+                .expect("Messages root is required in GenesisProto"),
+            transactions_root: proto
+                .transactions_root
+                .map(Bytes32::from)
+                .expect("Transactions root is required in GenesisProto"),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PoAConsensus {
     pub signature: Signature,
@@ -84,19 +165,20 @@ impl From<FuelNodePoAConsensus> for PoAConsensus {
     }
 }
 
-impl Default for Consensus {
-    fn default() -> Self {
-        Consensus::Genesis(Genesis::default())
+impl From<PoAConsensusProto> for PoAConsensus {
+    fn from(proto: PoAConsensusProto) -> Self {
+        Self {
+            signature: proto
+                .signature
+                .map(Signature::from)
+                .expect("Signature is required in PoAConsensusProto"),
+        }
     }
 }
 
-impl From<FuelNodeConsensus> for Consensus {
-    fn from(consensus: FuelNodeConsensus) -> Self {
-        match consensus {
-            FuelNodeConsensus::Genesis(genesis) => Consensus::Genesis(genesis.into()),
-            FuelNodeConsensus::PoA(poa) => Consensus::PoAConsensus(poa.into()),
-            _ => panic!("Unknown consensus type: {:?}", consensus),
-        }
+impl Default for Consensus {
+    fn default() -> Self {
+        Consensus::Genesis(Genesis::default())
     }
 }
 
@@ -152,9 +234,80 @@ impl From<&FuelNodeBlockHeader> for BlockHeader {
     }
 }
 
+impl From<BlockHeaderProto> for BlockHeader {
+    fn from(proto: BlockHeaderProto) -> Self {
+        let version = match proto.version {
+            v if v == BlockHeaderVersionProto::BlockHeaderVersionV1 as i32 => {
+                BlockHeaderVersion::V1
+            }
+            _ => panic!("Unknown BlockHeaderVersionProto"),
+        };
+
+        Self {
+            application_hash: proto
+                .application_hash
+                .map(Bytes32::from)
+                .expect("Application hash is required in BlockHeaderProto"),
+            consensus_parameters_version: proto.consensus_parameters_version,
+            da_height: proto.da_height,
+            event_inbox_root: proto
+                .event_inbox_root
+                .map(Bytes32::from)
+                .expect("Event inbox root is required in BlockHeaderProto"),
+            id: proto.id.map(BlockId::from).expect("BlockId is required"),
+            height: proto.height,
+            message_outbox_root: proto
+                .message_outbox_root
+                .map(Bytes32::from)
+                .expect("Message outbox root is required"),
+            message_receipt_count: proto.message_receipt_count,
+            prev_root: proto
+                .prev_root
+                .map(Bytes32::from)
+                .expect("Previous root is required"),
+            state_transition_bytecode_version: proto.state_transition_bytecode_version,
+            time: proto
+                .time
+                .map(|time_proto| FuelNodeTai64Timestamp::from_unix(time_proto.value as i64))
+                .expect("Timestamp is required"),
+            transactions_count: proto.transactions_count as u16,
+            transactions_root: proto
+                .transactions_root
+                .map(Bytes32::from)
+                .expect("Transactions root is required"),
+            version,
+        }
+    }
+}
+
 // BlockHeaderVersion enum
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum BlockHeaderVersion {
     V1,
+}
+
+// Shared Types
+impl From<Bytes32Proto> for Bytes32 {
+    fn from(proto: Bytes32Proto) -> Self {
+        let mut value = [0u8; 32];
+        value.copy_from_slice(&proto.value);
+        value.into()
+    }
+}
+
+impl From<BlockIdProto> for BlockId {
+    fn from(proto: BlockIdProto) -> Self {
+        let mut value = [0u8; 32];
+        value.copy_from_slice(&proto.value);
+        value.into()
+    }
+}
+
+impl From<SignatureProto> for Signature {
+    fn from(proto: SignatureProto) -> Self {
+        let mut value = [0u8; 64];
+        value.copy_from_slice(&proto.value);
+        value.into()
+    }
 }
