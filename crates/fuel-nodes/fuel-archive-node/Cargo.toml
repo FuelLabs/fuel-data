@@ -1,5 +1,5 @@
 [package]
-name = "fuel-data-publisher"
+name = "fuel-archive-node"
 description = "Binary for publishing historical fuel data"
 authors = { workspace = true }
 keywords = { workspace = true }
@@ -50,5 +50,3 @@ mockall_double = { workspace = true }
 [features]
 default = []
 test-helpers = []
-
-

@@ -1,6 +1,6 @@
 [package]
-name = "fuel-data-live-publisher"
-description = "Binary for publishing live fuel data. Created to decouple its reliability from historical's"
+name = "fuel-relay-node"
+description = "Binary for forwarding fuel data live to a relay cluster"
 authors = { workspace = true }
 keywords = { workspace = true }
 edition = { workspace = true }

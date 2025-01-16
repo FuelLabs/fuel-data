@@ -6,11 +6,11 @@ use fuel_data_nats::NatsClient;
 
 use crate::packets::Packet;
 
-pub struct LivePublisherNatsClient {
+pub struct RelayNodeNatsClient {
     pub client: async_nats::Client,
 }
 
-impl LivePublisherNatsClient {
+impl RelayNodeNatsClient {
     pub async fn connect() -> anyhow::Result<Self> {
         let nats_url = dotenvy::var("NATS_URL").expect("NATS_URL must be set for admin role");
 
@@ -43,7 +43,7 @@ impl LivePublisherNatsClient {
     }
 }
 
-impl NatsClient for LivePublisherNatsClient {
+impl NatsClient for RelayNodeNatsClient {
     fn nats_client(&self) -> async_nats::Client {
         self.client.clone()
     }
