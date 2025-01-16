@@ -1,5 +1,5 @@
 [package]
-name = "fuel-data-proxy"
+name = "fuel-data-web"
 description = "Proxy for accessing published fuel data. Use this proxy to leverage popular filter access patterns or go directly to our S3 source for raw data."
 authors = { workspace = true }
 keywords = { workspace = true }
@@ -10,3 +10,14 @@ repository = { workspace = true }
 version = { workspace = true }
 rust-version = { workspace = true }
 publish = false
+
+[dependencies]
+anyhow = { workspace = true }
+async-nats = { workspace = true }
+displaydoc = { workspace = true }
+dotenvy = { workspace = true }
+rand = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+fuel-data-nats = { workspace = true }
