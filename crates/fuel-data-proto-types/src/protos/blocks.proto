@@ -75,7 +75,3 @@ enum BlockVersionProto {
     BLOCK_VERSION_V1 = 0;
 }
 
-// BlockHeight
-message BlockHeightProto {
-    string value = 1;
-}

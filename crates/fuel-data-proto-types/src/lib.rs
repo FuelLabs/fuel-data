@@ -1,3 +1,3 @@
-pub mod types {
-    include!("generated-types/blocks.rs");
-}
+mod types;
+
+pub use types::*;

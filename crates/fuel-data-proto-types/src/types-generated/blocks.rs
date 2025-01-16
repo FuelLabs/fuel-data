@@ -103,12 +103,6 @@ pub struct BlockProto {
     #[prost(enumeration = "BlockVersionProto", tag = "6")]
     pub version: i32,
 }
-/// BlockHeight
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BlockHeightProto {
-    #[prost(string, tag = "1")]
-    pub value: ::prost::alloc::string::String,
-}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum BlockHeaderVersionProto {
