@@ -1,6 +1,13 @@
 [workspace]
 resolver = "2"
-members = ["crates/*"]
+members = [
+    "crates/*",
+    "crates/fuel-nodes/fuel-node",
+    "crates/fuel-nodes/fuel-archive-node",
+    "crates/fuel-nodes/fuel-relay-node",
+]
+
+exclude = ["crates/fuel-nodes"]
 
 [workspace.package]
 authors = ["Fuel Labs <contact@fuel.sh>"]
@@ -65,7 +72,7 @@ thiserror = "2.0"
 
 
 # Workspace members
-fuel-node = { path = "crates/fuel-node" }
+fuel-node = { path = "crates/fuel-nodes/fuel-node" }
 fuel-data-nats = { path = "crates/fuel-data-nats" }
 fuel-data-types = { path = "crates/fuel-data-types" }
 fuel-data-proto-types = { path = "crates/fuel-data-proto-types" }

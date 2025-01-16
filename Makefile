@@ -1,4 +1,4 @@
-.PHONY: start-live-pub-nats stop-live-pub-nats restart-live-pub-nats 
+.PHONY: start-relay-node stop-relay-node restart-relay-node
 
 
 setup:
@@ -7,15 +7,14 @@ setup:
 # ------------------------------------------------------------
 #  LIVE PUBLISHER
 # ------------------------------------------------------------
-start-live-pub:
+start-relay-node:
+	docker-compose -f docker/docker-compose.yml up -d relay-node-nats
 	./scripts/start-live-pub.sh
 	
-start-live-pub-nats:
-	docker-compose -f docker/docker-compose.yml up -d live-publisher-nats
-
-stop-live-pub-nats:
+# TODO: Complete this step by killing binary 
+stop-relay-node:
 	docker-compose -f docker/docker-compose.yml stop live-publisher-nats
 	 
-restart-live-pub-nats: start-live-pub-nats stop-live-pub-nats
+restart-relay-node: start-relay-node stop-relay-node
 
 

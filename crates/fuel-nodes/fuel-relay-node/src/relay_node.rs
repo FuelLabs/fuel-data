@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::nats_client::LivePublisherNatsClient;
+use crate::nats_client::RelayNodeNatsClient;
 use crate::packets::build_block_packet;
 use crate::packets::BuildPacketCommonArgs;
 
@@ -10,14 +10,14 @@ use fuel_node::types::*;
 
 use fuel_node::FuelNodeLike;
 
-pub struct LivePublisher {
+pub struct RelayNode {
     pub fuel_core: Arc<dyn FuelNodeLike>,
-    pub nats_client: Arc<LivePublisherNatsClient>,
+    pub nats_client: Arc<RelayNodeNatsClient>,
 }
 
-impl LivePublisher {
+impl RelayNode {
     pub async fn new(fuel_core: Arc<dyn FuelNodeLike>) -> anyhow::Result<Self> {
-        let nats_client = LivePublisherNatsClient::connect().await?;
+        let nats_client = RelayNodeNatsClient::connect().await?;
 
         fuel_core.start().await?;
 
