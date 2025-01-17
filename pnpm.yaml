@@ -1,0 +1,3 @@
+packages:
+  - fuel-data-frontends/*
+  - fuel-data-sdks/fuel-data-ts

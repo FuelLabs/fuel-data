@@ -24,6 +24,7 @@ values-publisher-secrets.yaml
 values-publisher-env.yaml
 localstack-data
 .vscode
+dist
 
 **/Cargo.lock
 !./Cargo.lock

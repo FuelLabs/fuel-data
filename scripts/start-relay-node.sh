@@ -19,7 +19,7 @@ cargo run -p fuel-relay-node -- \
     --poa-instant false \
     --enable-p2p \
     --keypair $KEYPAIR \
-    --snapshot ./crates/fuel-nodes/fuel-node/chain-config/testnet \
+    --snapshot ./fuel-nodes/fuel-node/chain-config/testnet \
     --enable-relayer \
     --relayer $RELAYER \
     --relayer-v2-listening-contracts $RELAYER_V2_LISTENING_CONTRACTS \

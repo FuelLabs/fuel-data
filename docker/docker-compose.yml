@@ -7,7 +7,7 @@ services:
       - 8222:8222
       - 8443:8443
     volumes:
-      - ../crates/fuel-nodes/fuel-relay-node/nats.conf:/etc/nats/nats.conf
+      - ../fuel-nodes/fuel-relay-node/nats.conf:/etc/nats/nats.conf
     command: [-m, '8222', --js, --config=/etc/nats/nats.conf, -D]
     env_file:
       - ./../.env
@@ -19,7 +19,7 @@ services:
       - 8223:8222
       - 8444:8443
     volumes:
-      - ../crates/fuel-archive-node/nats.conf:/etc/nats/nats.conf
+      - ../fuel-nodes/fuel-archive-node/nats.conf:/etc/nats/nats.conf
     command: [-m, '8222', --js, --config=/etc/nats/nats.conf, -D]
     env_file:
       - ./../.env

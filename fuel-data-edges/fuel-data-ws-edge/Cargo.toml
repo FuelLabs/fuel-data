@@ -1,0 +1,12 @@
+[package]
+name = "fuel-data-ws-edge"
+authors.workspace = true
+keywords.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
