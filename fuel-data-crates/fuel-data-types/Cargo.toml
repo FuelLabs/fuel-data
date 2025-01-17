@@ -25,6 +25,6 @@ fuel-core-types = { workspace = true, default-features = false, features = [
     "serde",
 ] }
 fuel-node = { workspace = true, features = ["types"] }
-fuel-data-proto-types = { workspace = true }
+fuel-data-protos = { workspace = true, features = ["fuel-data-types"] }
 hex = { workspace = true }
 serde = { workspace = true }

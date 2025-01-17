@@ -10,3 +10,10 @@ rust-version.workspace = true
 version.workspace = true
 
 [dependencies]
+tonic = "0.12"
+prost = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+[build-dependencies]
+tonic-build = "0.12"
+protoc-bin-vendored = "3.1.0"

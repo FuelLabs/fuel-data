@@ -1,6 +1,5 @@
 [package]
-name = "fuel-data-proto-types"
-description = "Fuel data Protobuf data transfer schema definitions"
+name = "fuel-data-protos"
 authors.workspace = true
 keywords.workspace = true
 edition.workspace = true
@@ -11,10 +10,19 @@ rust-version.workspace = true
 version.workspace = true
 
 [dependencies]
+fuel-node = { workspace = true, optional = true }
 prost = { workspace = true }
 prost-types = { workspace = true }
-fuel-node = { workspace = true }
 
 [build-dependencies]
 prost-build = "0.13"
 protoc-bin-vendored = "3.1.0"
+regex = "1.7"
+walkdir = "2.4"
+
+[features]
+default = ["fuel-data-edges", "fuel-data-types"]
+"fuel-data-edges" = ["fuel-data-edge", "fuel-data-grpc-edge"]
+"fuel-data-edge" = []
+"fuel-data-grpc-edge" = []
+"fuel-data-types" = ["fuel-node"]

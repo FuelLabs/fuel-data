@@ -6,6 +6,7 @@ members = [
     "fuel-data-sdks/fuel-data-rs",
     "fuel-data-edges/*",
     "fuel-data-cluster",
+    "fuel-data-protos",
 ]
 
 
@@ -75,5 +76,5 @@ thiserror = "2.0"
 fuel-node = { path = "fuel-nodes/fuel-node" }
 fuel-data-nats = { path = "fuel-data-crates/fuel-data-nats" }
 fuel-data-types = { path = "fuel-data-crates/fuel-data-types" }
-fuel-data-proto-types = { path = "fuel-data-crates/fuel-data-proto-types" }
+fuel-data-protos = { path = "fuel-data-protos" }
 fuel-data-cluster = { path = "fuel-data-cluster" }

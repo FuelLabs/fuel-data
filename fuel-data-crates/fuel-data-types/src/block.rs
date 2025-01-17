@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use fuel_data_proto_types::block::*;
+use fuel_data_protos::fuel_data_types::*;
 
 use fuel_node::types::*;
 

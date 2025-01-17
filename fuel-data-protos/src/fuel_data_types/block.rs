@@ -1,6 +1,6 @@
 use fuel_node::types::*;
 
-include!("../types-generated/block.rs");
+include!("../../generated/rust/fuel_data_types.block.rs");
 
 impl BlockProto {
     pub fn new(

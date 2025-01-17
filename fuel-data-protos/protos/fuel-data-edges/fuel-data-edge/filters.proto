@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package fuel_data_edge.filters;
+
+message BlocksFilter {
+  optional uint32 from = 1;
+  optional uint32 to = 2;
+  optional uint32 limit = 3;
+}
