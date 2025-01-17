@@ -5,6 +5,7 @@ members = [
     "fuel-nodes/*",
     "fuel-data-sdks/fuel-data-rs",
     "fuel-data-edges/*",
+    "fuel-data-cluster",
 ]
 
 
