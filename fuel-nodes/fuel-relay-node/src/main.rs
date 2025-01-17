@@ -20,9 +20,9 @@ async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
     let fuel_core: Arc<dyn FuelNodeLike> = FuelNode::new(cli.fuel_core_config).await?;
 
-    let live_publisher = RelayNode::new(Arc::clone(&fuel_core)).await?;
+    let relay_node = RelayNode::new(Arc::clone(&fuel_core)).await?;
 
-    live_publisher.run().await?;
+    relay_node.run().await?;
 
     Ok(())
 }

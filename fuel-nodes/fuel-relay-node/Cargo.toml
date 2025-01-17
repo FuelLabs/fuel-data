@@ -29,6 +29,7 @@ fuel-core-types = { workspace = true }
 fuel-node = { workspace = true }
 fuel-data-nats = { workspace = true }
 fuel-data-types = { workspace = true }
+fuel-data-cluster = { workspace = true }
 futures = { workspace = true }
 num_cpus = "1.16"
 parking_lot = { version = "0.12", features = ["serde"] }

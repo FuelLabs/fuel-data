@@ -12,8 +12,7 @@ pub struct RelayNodeNatsClient {
 
 impl RelayNodeNatsClient {
     pub async fn connect() -> anyhow::Result<Self> {
-        let nats_url = dotenvy::var("NATS_URL").expect("NATS_URL must be set for admin role");
-
+        let nats_url = fuel_data_cluster::where_is::relay_nats();
         let user = "admin".to_owned();
         let password = dotenvy::var("NATS_ADMIN_PASSWORD")
             .expect("NATS_ADMIN_PASSWORD must be set for admin role");

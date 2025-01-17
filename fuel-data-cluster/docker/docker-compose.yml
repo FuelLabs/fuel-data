@@ -8,7 +8,7 @@ services:
       - 8443:8443
     volumes:
       - ./nats/relay-nats.conf:/etc/nats/nats.conf
-    command: [-m, '8222', --js, --config=/etc/nats/nats.conf, -D]
+    command: [-m, '8222', --config=/etc/nats/nats.conf, -D]
     env_file:
       - ./../../.env
   archive-nats:
