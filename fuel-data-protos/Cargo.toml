@@ -11,11 +11,12 @@ version.workspace = true
 
 [dependencies]
 fuel-node = { workspace = true, optional = true }
+tonic = "0.12"
 prost = { workspace = true }
 prost-types = { workspace = true }
 
 [build-dependencies]
-prost-build = "0.13"
+tonic-build = "0.12"
 protoc-bin-vendored = "3.1.0"
 regex = "1.7"
 walkdir = "2.4"

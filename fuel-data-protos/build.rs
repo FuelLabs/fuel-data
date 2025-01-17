@@ -24,11 +24,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let output_dir = &Path::new("generated/rust");
 
-    // Compile the collected .proto files
-    prost_build::Config::new()
+    // Compile the collected .proto files with tonic-build
+    tonic_build::configure()
         .out_dir(output_dir)
         .compile_protos(&proto_files, &[protos_root])?;
 
+    // Replace "super::super" or deeper chains with "crate"
     replace_two_or_more_supers_with_crate_in_dir(output_dir)?;
 
     Ok(())
