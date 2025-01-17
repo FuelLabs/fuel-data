@@ -6,14 +6,11 @@ import "fuel-data-edges/fuel-data-edge/filters.proto";
 import "fuel-data-types/block.proto";
 
 service BlocksStream {
-  rpc Get(BlocksStreamRequest) returns (BlocksStreamResponse);
+  rpc Get(BlocksStreamRequest)
+      returns (stream fuel_data_types.block.BlockProto);
 }
 
 message BlocksStreamRequest {
   bytes ip_address = 1;
   fuel_data_edge.filters.BlocksFilter filter = 2;
-}
-
-message BlocksStreamResponse {
-  repeated fuel_data_types.block.BlockProto blocks = 1;
 }

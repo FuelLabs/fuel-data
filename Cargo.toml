@@ -67,6 +67,7 @@ sha2 = "0.10"
 strum = "0.26"
 strum_macros = "0.26"
 tokio = { version = "1.41", features = ["full"] }
+tokio-stream = "0.1.17"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 thiserror = "2.0"

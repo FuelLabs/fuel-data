@@ -27,6 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Compile the collected .proto files with tonic-build
     tonic_build::configure()
         .out_dir(output_dir)
+        .type_attribute(".", "#[derive(serde::Serialize, serde::Deserialize)]") // Add serde traits
         .compile_protos(&proto_files, &[protos_root])?;
 
     // Replace "super::super" or deeper chains with "crate"
