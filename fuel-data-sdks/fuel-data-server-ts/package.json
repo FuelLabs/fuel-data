@@ -1,5 +1,5 @@
 {
-  "name": "fuel-data-streams-ts",
+  "name": "@fuel-data/server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
