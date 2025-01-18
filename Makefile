@@ -15,11 +15,14 @@ start-relay-node:
 stop-relay-node:
 	docker-compose -f fuel-data-cluster/docker/docker-compose.yml stop relay-nats
 	 
-restart-relay-node: start-relay-node stop-relay-node
+restart-relay-node: 
+	stop-relay-node 
+	rm -rf ./tmp/fuel-relay-node-db
+	start-relay-node
 
 start-grpc-edge:
 	cargo run -p fuel-data-grpc-edge
 
-run-sdk-examples:
+run-examples:
 	cargo run -p fuel-data-rs
 

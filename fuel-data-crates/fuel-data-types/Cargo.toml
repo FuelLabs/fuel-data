@@ -28,3 +28,4 @@ fuel-node = { workspace = true, features = ["types"] }
 fuel-data-protos = { workspace = true, features = ["fuel-data-types"] }
 hex = { workspace = true }
 serde = { workspace = true }
+tai64 = "4.0.0"

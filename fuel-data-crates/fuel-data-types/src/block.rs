@@ -268,7 +268,7 @@ impl From<BlockHeaderProto> for BlockHeader {
             state_transition_bytecode_version: proto.state_transition_bytecode_version,
             time: proto
                 .time
-                .map(|time_proto| FuelNodeTai64Timestamp::from_unix(time_proto.value as i64))
+                .map(|time_proto| FuelNodeTai64Timestamp(tai64::Tai64(time_proto.value)))
                 .expect("Timestamp is required"),
             transactions_count: proto.transactions_count as u16,
             transactions_root: proto

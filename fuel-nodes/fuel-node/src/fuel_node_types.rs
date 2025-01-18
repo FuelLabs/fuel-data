@@ -6,6 +6,7 @@ pub use fuel_core_client::client::{
     types::TransactionStatus as FuelNodeClientTransactionStatus,
 };
 pub use fuel_core_importer::ImporterResult as FuelNodeImporterResult;
+pub use fuel_core_types::tai64::Tai64N as FuelNodeTai64N;
 pub use fuel_core_types::{
     blockchain::{
         block::Block as FuelNodeBlock,
