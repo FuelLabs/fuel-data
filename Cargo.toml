@@ -4,6 +4,7 @@ members = [
     "fuel-data-crates/*",
     "fuel-nodes/*",
     "fuel-data-sdks/fuel-data-rs",
+    "fuel-data-sdks/fuel-data-streams-rs",
     "fuel-data-edges/*",
     "fuel-data-cluster",
     "fuel-data-protos",

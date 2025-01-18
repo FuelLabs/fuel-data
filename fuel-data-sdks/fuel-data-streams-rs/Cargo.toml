@@ -1,5 +1,5 @@
 [package]
-name = "fuel-data"
+name = "fuel-data-streams"
 authors.workspace = true
 keywords.workspace = true
 edition.workspace = true

@@ -1,3 +1,4 @@
 packages:
   - fuel-data-frontends/*
   - fuel-data-sdks/fuel-data-ts
+  - fuel-data-sdks/fuel-data-streams-ts
