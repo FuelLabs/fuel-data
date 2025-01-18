@@ -20,4 +20,6 @@ restart-relay-node: start-relay-node stop-relay-node
 start-grpc-edge:
 	cargo run -p fuel-data-grpc-edge
 
+run-sdk-examples:
+	cargo run -p fuel-data-rs
 

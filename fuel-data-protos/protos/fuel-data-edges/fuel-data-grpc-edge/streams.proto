@@ -11,6 +11,5 @@ service BlocksStream {
 }
 
 message BlocksStreamRequest {
-  bytes ip_address = 1;
   fuel_data_edge.filters.BlocksFilter filter = 2;
 }

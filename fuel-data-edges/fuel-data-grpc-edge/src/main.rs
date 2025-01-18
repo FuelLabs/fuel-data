@@ -12,6 +12,38 @@ use fuel_data_protos::fuel_data_types::BlockProto;
 use tokio::sync::mpsc;
 use tokio_stream::{wrappers::ReceiverStream, Stream, StreamExt};
 
+use async_nats::ConnectOptions;
+
+use fuel_data_nats::{nats_client, NatsClient};
+
+use prost::Message;
+
+pub struct EdgeNatsClient {
+    pub client: async_nats::Client,
+}
+
+impl EdgeNatsClient {
+    pub async fn connect() -> Result<Self, Box<dyn std::error::Error>> {
+        let nats_url = fuel_data_cluster::where_is::relay_nats();
+        let user = "default_user".to_owned();
+        let password = "".to_owned();
+
+        let client = ConnectOptions::with_user_and_password(user, password)
+            .connection_timeout(Duration::from_secs(5))
+            .max_reconnects(1)
+            .connect(nats_url)
+            .await?;
+
+        Ok(Self { client })
+    }
+}
+
+impl NatsClient for EdgeNatsClient {
+    fn nats_client(&self) -> async_nats::Client {
+        self.client.clone()
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct BlocksStreamer;
 
@@ -23,7 +55,6 @@ impl BlocksStream for BlocksStreamer {
         &self,
         request: Request<BlocksStreamRequest>,
     ) -> Result<Response<Self::GetStream>, Status> {
-        println!("EchoServer::server_streaming_echo");
         println!("\tclient connected from: {:?}", request.remote_addr());
 
         let filter = request.into_inner().filter;
@@ -42,15 +73,27 @@ impl BlocksStream for BlocksStreamer {
                 format!("blocks.{}.{}", from_block_height, producer)
             })
             .unwrap_or("blocks.*.*".to_string());
+        println!("\trequested subject: {}", subject);
 
-        // creating infinite stream with requested message
-        let repeat = std::iter::repeat(BlockProto::default());
-        let mut stream = Box::pin(tokio_stream::iter(repeat).throttle(Duration::from_millis(200)));
+        let nats_client = EdgeNatsClient::connect()
+            .await
+            .expect("NATS Client connection failed");
+
+        let mut subscription = nats_client
+            .client
+            .subscribe(subject)
+            .await
+            .expect("All subjects must yield valid subscriptions");
 
         let (tx, rx) = mpsc::channel(128);
         tokio::spawn(async move {
-            while let Some(item) = stream.next().await {
-                match tx.send(Result::<_, Status>::Ok(item)).await {
+            while let Some(item) = subscription.next().await {
+                println!("\tBlock received");
+                println!("Subject{}", &item.subject);
+                let block = BlockProto::decode(item.payload).expect("must decode block");
+                println!("Block{}", &(serde_json::to_string(&block).unwrap()));
+
+                match tx.send(Result::<_, Status>::Ok(block)).await {
                     Ok(_) => {
                         // item (server response) was queued to be send to client
                     }

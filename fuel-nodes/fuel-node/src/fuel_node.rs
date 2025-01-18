@@ -65,10 +65,8 @@ impl FuelNodeLike for FuelNode {
     fn is_started(&self) -> bool {
         self.fuel_service.state().started()
     }
-    async fn await_synced_at_least_once(&self, historical: bool) -> anyhow::Result<()> {
-        if !historical {
-            self.fuel_service.await_relayer_synced().await?;
-        }
+    async fn await_synced_at_least_once(&self) -> anyhow::Result<()> {
+        self.fuel_service.await_relayer_synced().await?;
         Ok(())
     }
 
