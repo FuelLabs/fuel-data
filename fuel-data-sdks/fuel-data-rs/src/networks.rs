@@ -2,20 +2,20 @@ use tonic::transport::Endpoint;
 
 use crate::errors::GrpcConnectionError;
 
-pub enum FuelDataGrpcEdgeNetwork {
+pub enum FuelDataStreamNetwork {
     Local,
     Remote,
 }
 
-impl TryInto<Endpoint> for FuelDataGrpcEdgeNetwork {
+impl TryInto<Endpoint> for FuelDataStreamNetwork {
     type Error = GrpcConnectionError;
 
     fn try_into(self) -> Result<Endpoint, Self::Error> {
         match self {
-            FuelDataGrpcEdgeNetwork::Local => "http://[::1]:50051"
+            FuelDataStreamNetwork::Local => "http://[::1]:50051"
                 .parse()
                 .map_err(GrpcConnectionError::from),
-            FuelDataGrpcEdgeNetwork::Remote => "http://fuel-data-grpc-edge.fuel.network:50051"
+            FuelDataStreamNetwork::Remote => "http://fuel-data-grpc-edge.fuel.network:50051"
                 .parse()
                 .map_err(GrpcConnectionError::from),
         }

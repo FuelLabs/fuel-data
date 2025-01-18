@@ -1,38 +1,27 @@
+mod edge;
 mod errors;
 mod networks;
 mod streams;
 
-use std::convert::TryInto;
-
+use edge::FuelDataEdge;
+use networks::FuelDataStreamNetwork;
 use tokio_stream::StreamExt;
 
-use fuel_data_protos::fuel_data_grpc_edge::streams::blocks_stream_client::BlocksStreamClient;
-use fuel_data_protos::fuel_data_grpc_edge::streams::BlocksStreamRequest;
-
-use errors::{FuelDataEdgeError, GrpcConnectionError, StreamFilterError};
-
-pub struct FuelDataEdge {}
-
-impl FuelDataEdge {
-    pub fn connect<E: TryInto<tonic::transport::Endpoint>>(
-        grpc_endpoint: E,
-    ) -> Result<Self, FuelDataEdgeError> {
-        Ok(Self {})
-    }
-}
+pub use streams::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut client = BlocksStreamClient::connect("http://[::1]:50051").await?;
+    let fuel_data_edge = FuelDataEdge::connect(FuelDataStreamNetwork::Local).await?;
 
-    let mut stream = client
-        .get(BlocksStreamRequest::default())
-        .await
-        .unwrap()
-        .into_inner();
+    let mut blocks_stream = BlocksStream::new()
+        .from(0)
+        .chunk(2)
+        .take(4)
+        .stream(&fuel_data_edge)
+        .await?;
 
-    while let Some(response) = stream.next().await {
-        println!("\treceived: {}", serde_json::to_string(&response.ok())?);
+    while let Some(Ok(block)) = blocks_stream.next().await {
+        println!("\treceived: {}", serde_json::to_string(&block)?);
     }
 
     Ok(())

@@ -1,8 +1,9 @@
-
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum FuelDataEdgeError {
+pub enum FuelDataError {
+    #[error("gRPC server error: {0}")]
+    ServerError(#[from] tonic::Status),
     #[error("gRPC connection error: {0}")]
     GrpcConnectionError(#[from] GrpcConnectionError),
     #[error("Stream filter error: {0}")]
@@ -16,7 +17,9 @@ pub enum GrpcConnectionError {
     #[error("Connection was refused")]
     ConnectionRefused,
     #[error("Invalid gRPC URI: {0}")]
-    InvalidGrpcUri(#[from] tonic::transport::Error), // Renamed for clarity and standard naming
+    InvalidGrpcUri(#[from] Box<dyn std::error::Error + Send + Sync>),
+    #[error("Transport error: {0}")]
+    Transport(#[from] tonic::transport::Error),
 }
 
 #[derive(Debug, Error)]
