@@ -21,5 +21,5 @@ start-grpc-edge:
 	cargo run -p fuel-data-grpc-edge
 
 run-sdk-examples:
-	cargo run -p fuel-data-rs
+	cargo run -p fuel-data-streams-rs
 
