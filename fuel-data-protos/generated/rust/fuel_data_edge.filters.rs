@@ -5,9 +5,11 @@ pub struct BlocksFilter {
     #[prost(uint32, optional, tag = "1")]
     pub from: ::core::option::Option<u32>,
     #[prost(uint32, optional, tag = "2")]
+    pub to: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "3")]
     pub producer: ::core::option::Option<u32>,
     #[prost(uint32, optional, tag = "4")]
     pub take: ::core::option::Option<u32>,
-    #[prost(uint32, optional, tag = "3")]
-    pub per_stream_count: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "5")]
+    pub chunk: ::core::option::Option<u32>,
 }
