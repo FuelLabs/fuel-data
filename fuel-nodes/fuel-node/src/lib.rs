@@ -8,12 +8,8 @@ pub mod fuel_node_like;
 pub use fuel_node::FuelNode;
 
 #[cfg(feature = "all")]
-pub use fuel_node_like::FuelNodeLike;
+pub use fuel_node_like::*;
 
-#[cfg(feature = "types")]
-pub mod fuel_node_types;
-
-#[cfg(feature = "types")]
 pub mod types {
-    pub use super::fuel_node_types::*;
+    pub use fuel_node_types::*;
 }

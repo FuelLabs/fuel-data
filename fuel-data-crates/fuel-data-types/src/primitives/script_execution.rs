@@ -1,5 +1,5 @@
 use fuel_core_types::{fuel_asm::RawInstruction, fuel_tx::PanicReason};
-use fuel_node::types::*;
+use fuel_node_types::*;
 
 #[derive(Debug, Default, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct PanicInstruction {

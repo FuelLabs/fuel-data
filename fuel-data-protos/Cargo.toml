@@ -9,8 +9,11 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
-fuel-node = { workspace = true, optional = true }
+fuel-node-types = { workspace = true, optional = true }
 tonic = "0.12"
 prost = { workspace = true }
 prost-types = { workspace = true }
@@ -27,4 +30,4 @@ default = ["fuel-data-edges", "fuel-data-types"]
 "fuel-data-edges" = ["fuel-data-edge", "fuel-data-grpc-edge"]
 "fuel-data-edge" = []
 "fuel-data-grpc-edge" = []
-"fuel-data-types" = ["fuel-node"]
+"fuel-data-types" = ["fuel-node-types"]

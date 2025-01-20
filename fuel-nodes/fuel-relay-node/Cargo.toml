@@ -11,6 +11,10 @@ version = { workspace = true }
 rust-version = { workspace = true }
 publish = false
 
+[[bin]]
+name = "fuel-relay-node"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = { workspace = true }
 async-nats = { workspace = true }
@@ -26,7 +30,7 @@ fuel-core-importer = { workspace = true }
 fuel-core-services = { workspace = true }
 fuel-core-storage = { workspace = true }
 fuel-core-types = { workspace = true }
-fuel-node = { workspace = true }
+fuel-node = { path = "../fuel-node" }
 fuel-data-nats = { workspace = true }
 fuel-data-types = { workspace = true }
 fuel-data-cluster = { workspace = true }

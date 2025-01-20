@@ -11,6 +11,9 @@ version = { workspace = true }
 rust-version = { workspace = true }
 publish = false
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 anyhow = { workspace = true }
 async-nats = { workspace = true }

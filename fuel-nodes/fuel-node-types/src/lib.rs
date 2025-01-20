@@ -1,11 +1,7 @@
-use fuel_core::state::{
-    generic_database::GenericDatabase, iterable_key_value_view::IterableKeyValueViewWrapper,
-};
 pub use fuel_core_client::client::{
     schema::Tai64Timestamp as FuelNodeTai64Timestamp,
     types::TransactionStatus as FuelNodeClientTransactionStatus,
 };
-pub use fuel_core_importer::ImporterResult as FuelNodeImporterResult;
 pub use fuel_core_types::tai64::Tai64N as FuelNodeTai64N;
 pub use fuel_core_types::{
     blockchain::{
@@ -43,6 +39,3 @@ pub use fuel_core_types::{
     },
     tai64::Tai64 as FuelNodeTai64,
 };
-
-pub type FuelNodeOffchainDatabase =
-    GenericDatabase<IterableKeyValueViewWrapper<fuel_core::fuel_core_graphql_api::storage::Column>>;

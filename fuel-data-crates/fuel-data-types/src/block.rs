@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use fuel_data_protos::fuel_data_types::*;
 
-use fuel_node::types::*;
+use fuel_node_types::*;
 
 use crate::primitives::*;
 

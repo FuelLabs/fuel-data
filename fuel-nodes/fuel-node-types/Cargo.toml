@@ -1,0 +1,19 @@
+[package]
+name = "fuel-node-types"
+description = "Adapters and Interfaces used for integrating Fuel client node"
+authors = { workspace = true }
+keywords = { workspace = true }
+edition = { workspace = true }
+homepage = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+version = { workspace = true }
+rust-version = { workspace = true }
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+fuel-core-client = { workspace = true }
+fuel-core-types = { workspace = true }

@@ -1,4 +1,4 @@
-use fuel_node::types::*;
+use fuel_node_types::*;
 
 #[derive(
     Debug,

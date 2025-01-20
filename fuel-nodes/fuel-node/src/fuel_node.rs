@@ -10,7 +10,7 @@ use fuel_core_bin::FuelService;
 use tokio::{sync::broadcast::Receiver, time::sleep};
 
 use crate::fuel_node_like::FuelNodeLike;
-use crate::fuel_node_types::*;
+use crate::types::*;
 
 pub type OffchainDatabase =
     GenericDatabase<IterableKeyValueViewWrapper<fuel_core::fuel_core_graphql_api::storage::Column>>;

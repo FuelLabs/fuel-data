@@ -1,6 +1,6 @@
 use super::Bytes32;
 
-use fuel_node::types::*;
+use fuel_node_types::*;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub struct UtxoId {

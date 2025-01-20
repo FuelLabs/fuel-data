@@ -11,6 +11,10 @@ version = { workspace = true }
 rust-version = { workspace = true }
 publish = false
 
+[[bin]]
+name = "fuel-archive-node"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = { workspace = true }
 async-nats = { workspace = true }

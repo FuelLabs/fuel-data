@@ -1,5 +1,5 @@
 use fuel_core_types::fuel_types;
-use fuel_node::types::*;
+use fuel_node_types::*;
 
 use super::{LongBytes, UtxoId};
 use crate::{generate_byte_type_wrapper, impl_bytes32_to_type, impl_from_type_to_bytes32};

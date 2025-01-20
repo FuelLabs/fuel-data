@@ -9,6 +9,9 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 fuel-core = { workspace = true, default-features = false, features = [
     "p2p",
@@ -24,7 +27,7 @@ fuel-core-types = { workspace = true, default-features = false, features = [
     "std",
     "serde",
 ] }
-fuel-node = { workspace = true, features = ["types"] }
+fuel-node-types = { workspace = true }
 fuel-data-protos = { workspace = true, features = ["fuel-data-types"] }
 hex = { workspace = true }
 serde = { workspace = true }

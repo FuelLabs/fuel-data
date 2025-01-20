@@ -9,6 +9,10 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 
+[[bin]]
+name = "fuel-data-rs"
+path = "src/main.rs"
+
 [dependencies]
 async-trait = { workspace = true }
 prost = { workspace = true }
