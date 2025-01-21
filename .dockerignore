@@ -2,3 +2,4 @@
 **/script/out
 **/node_modules
 **/.git
+**/rust-toolchain.toml
