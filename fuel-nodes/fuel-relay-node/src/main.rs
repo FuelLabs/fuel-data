@@ -1,7 +1,5 @@
 mod nats_client;
-mod packets;
 pub mod relay_node;
-mod subjects;
 
 use std::sync::Arc;
 

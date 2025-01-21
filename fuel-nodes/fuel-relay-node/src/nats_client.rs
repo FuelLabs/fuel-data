@@ -4,7 +4,7 @@ use async_nats::ConnectOptions;
 
 use fuel_data_nats::NatsClient;
 
-use crate::packets::Packet;
+use fuel_node_publishing::packets::Packet;
 
 pub struct RelayNodeNatsClient {
     pub client: async_nats::Client,
@@ -26,10 +26,7 @@ impl RelayNodeNatsClient {
         Ok(Self { client })
     }
 
-    pub async fn publish_live<T>(
-        &self,
-        Packet { subject, payload }: Packet<T>,
-    ) -> anyhow::Result<()>
+    pub async fn publish<T>(&self, Packet { subject, payload }: Packet<T>) -> anyhow::Result<()>
     where
         T: prost::Message,
     {

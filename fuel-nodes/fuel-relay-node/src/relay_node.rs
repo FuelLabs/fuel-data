@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
 use crate::nats_client::RelayNodeNatsClient;
-use crate::packets::build_block_packet;
-use crate::packets::BuildPacketCommonArgs;
+
+use fuel_node_publishing::packets::build_block_packet;
+use fuel_node_publishing::packets::BuildPacketCommonArgs;
 
 use fuel_core::database::database_description::DatabaseHeight;
 use fuel_data_types::*;
@@ -56,7 +57,7 @@ impl RelayNode {
             let block_packet = build_block_packet(&block, transaction_ids, build_args);
 
             tracing::info!("Publishing block:{:?}...", block_height);
-            self.nats_client.publish_live(block_packet).await?;
+            self.nats_client.publish(block_packet).await?;
             tracing::info!("Block:{:?} published successfully", block_height);
         }
 

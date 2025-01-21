@@ -1,5 +1,6 @@
 [package]
-name = "fuel-data-publishing"
+name = "fuel-node-publishing"
+description = "Houses common code for nodes publishing fuel data"
 authors.workspace = true
 keywords.workspace = true
 edition.workspace = true
@@ -13,3 +14,6 @@ version.workspace = true
 path = "src/lib.rs"
 
 [dependencies]
+fuel-node = { workspace = true }
+fuel-data-types = { workspace = true }
+prost = { workspace = true }

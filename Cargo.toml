@@ -78,4 +78,6 @@ fuel-data-nats = { path = "fuel-data-crates/fuel-data-nats" }
 fuel-data-types = { path = "fuel-data-crates/fuel-data-types" }
 fuel-data-protos = { path = "fuel-data-protos" }
 fuel-data-cluster = { path = "fuel-data-cluster" }
+fuel-node = { path = "fuel-nodes/fuel-node" }
 fuel-node-types = { path = "fuel-nodes/fuel-node-types" }
+fuel-node-publishing = { path = "./fuel-nodes/fuel-node-publishing" }

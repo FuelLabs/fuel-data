@@ -30,7 +30,10 @@ fuel-core-importer = { workspace = true }
 fuel-core-services = { workspace = true }
 fuel-core-storage = { workspace = true }
 fuel-core-types = { workspace = true }
-fuel-node = { path = "../fuel-node" }
+
+fuel-node = { workspace = true }
+fuel-node-publishing = { workspace = true }
+
 fuel-data-nats = { workspace = true }
 fuel-data-types = { workspace = true }
 fuel-data-cluster = { workspace = true }
