@@ -1,0 +1,16 @@
+namespace: fuel-data
+
+helmDefaults:
+  createNamespace: true
+
+releases:
+  - name: relay-nats
+    chart: nats/nats
+    version: latest
+    values:
+      - relay-nats/charts/values.yaml
+
+  - name: fuel-relay-node
+    chart: ghcr.io/fuellabs/helmcharts/fuel-relay-nats
+    values:
+      - ./fuel-relay-node/chart/values-local.yaml
