@@ -1,0 +1,4 @@
+image:
+  repository: k3d-localhost:2000/fuel-data-grpc-edge
+  tag: latest
+  pullPolicy: Always

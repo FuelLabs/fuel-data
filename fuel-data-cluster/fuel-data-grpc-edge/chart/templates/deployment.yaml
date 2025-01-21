@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fuel-data-grpc-edge
+  labels:
+    app: fuel-data-grpc-edge
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: fuel-data-grpc-edge
+  template:
+    metadata:
+      labels:
+        app: fuel-data-grpc-edge
+    spec:
+      containers:
+        - name: fuel-data-grpc-edge
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          ports:
+            - containerPort: 50051
+          env:
+          {{- if .Values.env }}
+          {{- toYaml .Values.env | nindent 12 }}
+          {{- end }}
+          resources: {{ toYaml .Values.resources | nindent 12 }}

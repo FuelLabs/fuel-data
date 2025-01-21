@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: fuel-data-grpc-edge
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 50051
+
+resources:
+  limits:
+    cpu: '500m'
+    memory: '256Mi'
+  requests:
+    cpu: '250m'
+    memory: '128Mi'
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+env:
+  - name: RELAY_NATS_URL
+    value: "nats://relay-nats:4222"
