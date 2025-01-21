@@ -1,0 +1,26 @@
+namespace: fuel-data
+
+helmDefaults:
+  createNamespace: true
+
+releases:
+  - name: relay-nats
+    chart: nats/nats
+    values:
+      - ../../relay-nats/charts/values-local.yaml
+
+  - name: fuel-data-grpc-edge
+    chart: ../../fuel-data-grpc-edge/chart
+    values:
+      - ../../fuel-data-grpc-edge/chart/values-local.yaml
+    needs:
+      - relay-nats
+
+  - name: fuel-relay-node
+    chart: ../../fuel-relay-node/chart
+    values:
+      - ../../fuel-relay-node/chart/values-local.yaml
+      - ../../fuel-relay-node/chart/values-{{ env "NETWORK" }}.yaml
+      - ../../fuel-relay-node/chart/values-{{ env "NETWORK" }}-secret.yaml
+    needs:
+      - relay-nats

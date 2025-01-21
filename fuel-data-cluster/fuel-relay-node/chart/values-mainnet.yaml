@@ -1,0 +1,11 @@
+mainnetEnv:
+  - name: RELAY_NODE_SERVICE_NAME
+    value: "fuel-relay-node-mainnet"
+  - name: CHAIN_CONFIG_PATH
+    value: "chain-config/mainnet"
+  - name: RESERVED_NODES
+    value: "/dnsaddr/mainnet.fuel.network"
+  - name: RELAYER_V2_LISTENING_CONTRACTS
+    value: "0xAEB0c00D0125A8a788956ade4f4F12Ead9f65DDf"
+  - name: RELAYER_DA_DEPLOY_HEIGHT
+    value: "20620434"

@@ -74,8 +74,8 @@ thiserror = "2.0"
 
 
 # Workspace members
-fuel-node = { path = "fuel-nodes/fuel-node" }
 fuel-data-nats = { path = "fuel-data-crates/fuel-data-nats" }
 fuel-data-types = { path = "fuel-data-crates/fuel-data-types" }
 fuel-data-protos = { path = "fuel-data-protos" }
 fuel-data-cluster = { path = "fuel-data-cluster" }
+fuel-node-types = { path = "fuel-nodes/fuel-node-types" }

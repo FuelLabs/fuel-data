@@ -10,6 +10,8 @@
 .cov
 lcov.info
 .env
+.env.mainnet
+.env.testnet
 node_modules/
 docker/db*
 tmp
@@ -28,3 +30,14 @@ dist
 
 **/Cargo.lock
 !./Cargo.lock
+
+.ignored
+scripts-custom
+
+**/secret.yaml
+**/secret-mainnet.yaml
+**/secret-testnet.yaml
+
+**/values-mainnet-secret.yaml
+**/values-testnet-secret.yaml
+

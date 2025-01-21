@@ -11,5 +11,8 @@ version = { workspace = true }
 rust-version = { workspace = true }
 publish = false
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 dotenvy = { workspace = true }

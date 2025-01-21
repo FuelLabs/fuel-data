@@ -25,9 +25,6 @@ RUN cargo chef cook --release --no-default-features --recipe-path recipe.json -p
 # Copy the full source code
 COPY . .
 
-# Ignore the rust-toolchain.toml file for GRPC edge
-RUN rm -f rust-toolchain.toml
-
 WORKDIR /app/fuel-data-edges/fuel-data-grpc-edge
 
 # Build the binary and specify the target directory

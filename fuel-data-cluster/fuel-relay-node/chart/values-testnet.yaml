@@ -1,0 +1,12 @@
+testnetEnv:
+  - name: RELAY_NODE_SERVICE_NAME
+    value: "fuel-relay-node-testnet"
+  - name: CHAIN_CONFIG_PATH
+    value: "chain-config/testnet"
+  - name: RESERVED_NODES
+    value: "/dns4/p2p-testnet.fuel.network/tcp/30333/p2p/16Uiu2HAmDxoChB7AheKNvCVpD4PHJwuDGn8rifMBEHmEynGHvHrf,/dns4/p2p-testnet.fuel.network/tcp/30333/p2p/16Uiu2HAmHnANNk4HjAxQV66BNCRxd2MBUU89ijboZkE69aLuSn1g,/dns4/p2p-testnet.fuel.network/tcp/30333/p2p/16Uiu2HAmVE468rpkh2X1kzz8qQXmqNFiPxU5Lrya28nZdbRUdVJX"
+  - name: RELAYER_V2_LISTENING_CONTRACTS
+    value: "0x01855B78C1f8868DE70e84507ec735983bf262dA"
+  - name: RELAYER_DA_DEPLOY_HEIGHT
+    value: "5827607"
+

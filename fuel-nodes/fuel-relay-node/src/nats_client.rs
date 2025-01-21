@@ -14,8 +14,8 @@ impl RelayNodeNatsClient {
     pub async fn connect() -> anyhow::Result<Self> {
         let nats_url = fuel_data_cluster::where_is::relay_nats();
         let user = "admin".to_owned();
-        let password = dotenvy::var("NATS_ADMIN_PASSWORD")
-            .expect("NATS_ADMIN_PASSWORD must be set for admin role");
+        let password = dotenvy::var("RELAY_NATS_ADMIN_PASSWORD")
+            .expect("RELAY_NATS_ADMIN_PASSWORD must be set for admin role");
 
         let client = ConnectOptions::with_user_and_password(user, password)
             .connection_timeout(Duration::from_secs(5))
