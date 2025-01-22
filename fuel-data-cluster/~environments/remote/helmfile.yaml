@@ -12,5 +12,3 @@ releases:
 
   - name: fuel-relay-node
     chart: ghcr.io/fuellabs/helmcharts/fuel-relay-nats
-    values:
-      - ./fuel-relay-node/chart/values-local.yaml

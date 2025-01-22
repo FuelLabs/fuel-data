@@ -1,0 +1,19 @@
+services:
+  relay-nats:
+    image: nats:latest
+    restart: always
+    ports:
+      - 4222:4222
+      - 8222:8222
+    volumes:
+      - ../../fuel-relay-nats/.conf:/etc/nats/nats.conf
+    command: [-m, '8222', --config=/etc/nats/nats.conf, -D]
+  archive-nats:
+    image: nats:latest
+    restart: always
+    ports:
+      - 4223:4223
+      - 8223:8223
+    volumes:
+      - ../../fuel-archive-nats/.conf:/etc/nats/nats.conf
+    command: [-m, '8223', --js, --config=/etc/nats/nats.conf, -D]

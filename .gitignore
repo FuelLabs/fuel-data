@@ -33,6 +33,7 @@ dist
 
 .ignored
 scripts-custom
+aj
 
 **/secret.yaml
 **/secret-mainnet.yaml

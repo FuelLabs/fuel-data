@@ -1,0 +1,62 @@
+nats:
+  image:
+    tag: 'latest'
+
+  resources:
+    requests:
+      memory: '256Mi'
+      cpu: '200m'
+    limits:
+      memory: '512Mi'
+      cpu: '500m'
+
+  metrics:
+    enabled: true
+    prometheus:
+      enabled: true
+      scrapeInterval: 15s
+      labels:
+        app: nats
+
+config:
+  nats:
+    port: 4223
+
+  monitor:
+    port: 8223
+
+  cluster:
+    enabled: true
+    port: 6223
+    replicas: 3
+    routeURLs:
+      useFQDN: true
+      k8sClusterDomain: cluster.local
+  
+  jetstream:
+    enabled: true
+    fileStore:
+      enabled: true
+      dir: /data
+      pvc:
+        enabled: true
+        size: 10Gi
+        storageClassName: standard
+
+service:
+  type: ClusterIP
+  ports:
+    nats:
+      enabled: true
+      port: 4223
+      targetPort: 4223
+    monitor:
+      enabled: true
+      port: 8223
+      targetPort: 8223
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
