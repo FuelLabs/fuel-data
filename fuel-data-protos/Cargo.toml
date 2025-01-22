@@ -26,8 +26,7 @@ regex = "1.7"
 walkdir = "2.4"
 
 [features]
-default = ["fuel-data-edges", "fuel-data-types"]
-"fuel-data-edges" = ["fuel-data-edge", "fuel-data-grpc-edge"]
+default = ["fuel-data-edge", "fuel-data-grpc-edge", "fuel-data-types"]
 "fuel-data-edge" = []
 "fuel-data-grpc-edge" = []
 "fuel-data-types" = ["fuel-node-types"]

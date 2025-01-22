@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package fuel_data_grpc_edge.streams;
 
-import "fuel-data-edges/fuel-data-edge/filters.proto";
+import "fuel-data-edge/filters.proto";
 import "fuel-data-types/block.proto";
 
 service BlocksStream {
