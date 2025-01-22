@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: '{{ .Values.image.repository }}:{{ .Values.image.tag }}'
+          env:
+          {{- $mainnetEnv := default (list) .Values.mainnetEnv }}
+          {{- $mainnetSecretEnv := default (list) .Values.mainnetSecretEnv }}
+          {{- $testnetEnv := default (list) .Values.testnetEnv }}
+          {{- $testnetSecretEnv := default (list) .Values.testnetSecretEnv }}
+          {{- $additionalEnv := default (list) .Values.env }}
+          {{- range $envList := list $mainnetEnv $mainnetSecretEnv $testnetEnv $testnetSecretEnv $additionalEnv }}
+            {{- range $entry := $envList }}
+              {{- if and (kindIs "map" $entry) (hasKey $entry "name") (hasKey $entry "value") }}
+              - name: {{ $entry.name | quote }}
+                value: {{ $entry.value | quote }}
+              {{- else }}
+              {{- fail (printf "Invalid env entry: %v" $entry) }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          args:
+            - '--enable-relayer'
+            - '--enable-p2p'
+            - '--keypair'
+            - '$(KEYPAIR)'
+            - '--relayer'
+            - '$(ALCHEMY_OR_INFURA_RELAYER_URL)'
+            - '--ip'
+            - '0.0.0.0'
+            - '--port'
+            - $(ARCHIVE_NODE_PORT)
+            - '--peering-port'
+            - $(ARCHIVE_NODE_P2P_PORT)
+            - '--utxo-validation'
+            - '--poa-instant'
+            - 'false'
+            - '--db-path'
+            - '$(ARCHIVE_NODE_DB_PATH)'
+            - '--sync-header-batch-size'
+            - '100'
+            - '--relayer-log-page-size'
+            - '2000'
+            - '--sync-block-stream-buffer-size'
+            - '50'
+            - '--max-database-cache-size'
+            - '17179869184'
+            - '--state-rewind-duration'
+            - '136y'
+            - '--request-timeout'
+            - '60'
+            - '--graphql-max-complexity'
+            - '1000000000'
+            - '--service-name'
+            - '$(ARCHIVE_NODE_SERVICE_NAME)'
+            - '--snapshot'
+            - '$(CHAIN_CONFIG_PATH)'
+            - '--reserved-nodes'
+            - '$(RESERVED_NODES)'
+            - '--relayer-v2-listening-contracts'
+            - '$(RELAYER_V2_LISTENING_CONTRACTS)'
+            - '--relayer-da-deploy-height'
+            - '$(RELAYER_DA_DEPLOY_HEIGHT)'

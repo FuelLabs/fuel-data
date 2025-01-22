@@ -1,15 +1,31 @@
-.PHONY: start-relay-node stop-relay-node restart-relay-node
+.PHONY: start-relay-node stop-relay-node restart-relay-node start-archive-node stop-archive-node restart-archive-node
 
 
 setup:
-	./scripts/setup.sh
+	./scripts-local/setup.sh
+
+# ------------------------------------------------------------
+#  Archive Node
+# ------------------------------------------------------------
+start-archive-node:
+	docker-compose -f fuel-data-cluster/docker/docker-compose.yml up -d archive-nats
+	./scripts-local/start-archive-node.sh
+	
+# TODO: Complete this step by killing binary 
+stop-archive-node:
+	docker-compose -f fuel-data-cluster/docker/docker-compose.yml stop archive-nats
+	 
+restart-archive-node: 
+	stop-archive-node 
+	rm -rf ./tmp/fuel-archive-node-db
+	start-archive-node
 
 # ------------------------------------------------------------
 #  Relay Node
 # ------------------------------------------------------------
 start-relay-node:
 	docker-compose -f fuel-data-cluster/docker/docker-compose.yml up -d relay-nats
-	./scripts/start-relay-node.sh
+	./scripts-local/start-relay-node.sh
 	
 # TODO: Complete this step by killing binary 
 stop-relay-node:

@@ -1,0 +1,4 @@
+image:
+  repository: localhost:5000/fuel-archive-node
+  tag: latest
+  pullPolicy: always

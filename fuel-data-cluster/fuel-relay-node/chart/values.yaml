@@ -10,8 +10,6 @@ resources: {}
 env:
   - name: RELAY_NATS_URL
     value: "nats://relay-nats:4222"
-  - name: ARCHIVE_NATS_URL
-    value: "nats://archive-nats:4223"
   - name: RELAY_NODE_PORT
     value: 4000
   - name: RELAY_NODE_P2P_PORT

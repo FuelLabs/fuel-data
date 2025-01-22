@@ -18,9 +18,7 @@ async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
     let fuel_core: Arc<dyn FuelNodeLike> = FuelNode::new(cli.fuel_core_config).await?;
 
-    let relay_node = RelayNode::new(Arc::clone(&fuel_core)).await?;
-
-    relay_node.run().await?;
+    RelayNode::new(Arc::clone(&fuel_core)).await?.run().await?;
 
     Ok(())
 }

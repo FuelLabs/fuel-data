@@ -4,17 +4,32 @@ helmDefaults:
   createNamespace: true
 
 releases:
+  - name: archive-nats
+    chart: nats/nats
+    values:
+      - ../../archive-nats/charts/values.yaml
+
   - name: relay-nats
     chart: nats/nats
     values:
-      - ../../relay-nats/charts/values-local.yaml
+      - ../../relay-nats/charts/values.yaml
 
   - name: fuel-data-grpc-edge
     chart: ../../fuel-data-grpc-edge/chart
     values:
       - ../../fuel-data-grpc-edge/chart/values-local.yaml
     needs:
+      - archive-nats
       - relay-nats
+
+  - name: fuel-archive-node
+    chart: ../../fuel-archive-node/chart
+    values:
+      - ../../fuel-archive-node/chart/values-local.yaml
+      - ../../fuel-archive-node/chart/values-{{ env "NETWORK" }}.yaml
+      - ../../fuel-archive-node/chart/values-{{ env "NETWORK" }}-secret.yaml
+    needs:
+      - archive-nats
 
   - name: fuel-relay-node
     chart: ../../fuel-relay-node/chart
@@ -24,3 +39,4 @@ releases:
       - ../../fuel-relay-node/chart/values-{{ env "NETWORK" }}-secret.yaml
     needs:
       - relay-nats
+

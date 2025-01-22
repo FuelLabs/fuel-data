@@ -1,0 +1,20 @@
+image:
+  repository: fuel-archive-node
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service: {}
+
+resources: {}
+
+env:
+  - name: ARCHIVE_NATS_URL
+    value: "nats://archive-nats:4223"
+  - name: ARCHIVE_NODE_PORT
+    value: 4001
+  - name: ARCHIVE_NODE_P2P_PORT
+    value: 30334
+  - name: ARCHIVE_NODE_DB_PATH
+    value: "db/fuel-archive-node"
+  - name: RUST_BACKTRACE
+    value: "1"

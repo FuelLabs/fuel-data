@@ -50,11 +50,11 @@ pub trait FuelNodeLike: Sync + Send {
 
     fn blocks_subscription(&self) -> Receiver<fuel_core_importer::ImporterResult>;
 
-    fn get_latest_block_height(&self) -> anyhow::Result<u64> {
+    fn get_latest_block_height(&self) -> anyhow::Result<u32> {
         Ok(self
             .onchain_database()
             .latest_block_height()?
-            .map(|h| h.as_u64())
+            .map(|h| h.as_u64() as u32)
             .unwrap_or_default())
     }
 

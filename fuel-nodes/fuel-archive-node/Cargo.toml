@@ -30,10 +30,17 @@ fuel-core-importer = { workspace = true }
 fuel-core-services = { workspace = true }
 fuel-core-storage = { workspace = true }
 fuel-core-types = { workspace = true }
+
+fuel-node = { workspace = true }
+fuel-node-publishing = { workspace = true }
+
+fuel-data-nats = { workspace = true }
+fuel-data-types = { workspace = true }
+fuel-data-cluster = { workspace = true }
 futures = { workspace = true }
 num_cpus = "1.16"
 parking_lot = { version = "0.12", features = ["serde"] }
-prometheus = { version = "0.13", features = ["process"] }
+prost = { workspace = true }
 rand = { workspace = true }
 rayon = "1.10.0"
 rust_decimal = { version = "1.13" }
@@ -50,6 +57,7 @@ url = "2.5"
 assert_matches = { workspace = true }
 mockall = { workspace = true }
 mockall_double = { workspace = true }
+
 
 [features]
 default = []
