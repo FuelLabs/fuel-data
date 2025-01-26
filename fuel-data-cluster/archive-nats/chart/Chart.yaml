@@ -1,0 +1,9 @@
+apiVersion: v2
+name: archive-nats
+version: 0.1.0
+description: A Helm chart for deploying Fuel Archive Nats
+type: application
+dependencies:
+  - name: nats
+    version: 1.2.9
+    repository: https://nats-io.github.io/k8s/helm/charts/

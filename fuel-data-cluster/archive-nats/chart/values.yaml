@@ -1,0 +1,119 @@
+nats:
+  image:
+    tag: 'latest'
+
+  resources:
+    requests:
+      memory: '256Mi'
+      cpu: '200m'
+    limits:
+      memory: '512Mi'
+      cpu: '500m'
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+    prometheus:
+      enabled: true
+      scrapeInterval: 15s
+      labels:
+        app: nats
+    prometheusExporter:
+      enabled: true
+
+
+  config:
+    nats:
+      port: 4223
+
+    monitor:
+      port: 8223
+
+    cluster:
+      enabled: false
+      port: 6223
+      replicas: 1
+      routeURLs:
+        useFQDN: true
+
+    jetstream:
+      enabled: true
+      fileStore:
+        enabled: true
+        dir: /data
+        pvc:
+          enabled: true
+          size: 10Gi
+          storageClassName: csi-hostpath-sc
+        maxSize: 10Gi
+
+  service:
+    type: ClusterIP
+    ports:
+      nats:
+        enabled: true
+        port: 4223
+        targetPort: 4223
+      monitor:
+        enabled: true
+        port: 8223
+        targetPort: 8223
+
+  autoscaling:
+    enabled: false
+
+  promExporter:
+    enabled: true
+    image:
+      repository: natsio/prometheus-nats-exporter
+      tag: 0.16.0
+    port: 7777
+    env: {}
+
+  statefulSet:
+    merge: {}
+    patch: []
+    name: archive-nats
+
+  podMonitor:
+    enabled: true
+    labels:
+      release: prometheus
+    interval: 15s
+    scrapeTimeout: 10s
+    namespaceSelector:
+      matchNames:
+        - fuel-data
+    selector:
+      matchLabels:
+        app: nats
+
+  podTemplate:
+    merge:
+      metadata:
+        labels:
+          app: archive-nats
+          
+  podAnnotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "7777"
+    prometheus.io/scrape: "true"
+
+  containers:
+    - name: metrics
+      image: natsio/prometheus-nats-exporter:0.16.0
+      args:
+      - -connz
+      - -routez
+      - -subz
+      - -varz
+      - -channelz
+      - -serverz
+      - http://localhost:8222/
+      ports:
+        - containerPort: 7777
+          name: metrics
+

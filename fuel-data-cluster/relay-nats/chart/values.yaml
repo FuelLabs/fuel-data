@@ -1,0 +1,59 @@
+global:
+  labels:
+    app: relay-nats
+
+nats:
+  image:
+    tag: 'latest'
+
+  resources:
+    requests:
+      memory: '128Mi'
+      cpu: '100m'
+    limits:
+      memory: '256Mi'
+      cpu: '200m'
+
+config:
+  nats:
+    port: 4222
+    tls:
+      enabled: false
+
+  cluster:
+    enabled: false
+
+  jetstream:
+    enabled: false
+
+  leafnodes:
+    enabled: false
+  websocket:
+    enabled: false
+  mqtt:
+    enabled: false
+  gateway:
+    enabled: false
+
+  monitor:
+    enabled: true
+    port: 8222
+
+service:
+  type: ClusterIP
+  ports:
+    nats:
+      enabled: true
+      port: 4222
+      targetPort: 4222
+    monitor:
+      enabled: true
+      port: 8222
+      targetPort: 8222
+
+statefulSet:
+  enabled: false
+
+deployment:
+  enabled: true
+  replicas: 1 

@@ -1,3 +1,5 @@
+// TODO: Return URI types here
+
 pub mod where_is {
     pub fn relay_nats() -> String {
         dotenvy::var("RELAY_NATS_URL").expect("RELAY_NATS_URL must be set")
@@ -8,6 +10,14 @@ pub mod where_are {
     use k8s_openapi::api::core::v1::Pod;
     use kube::api::ListParams;
     use kube::{Api, Client};
+
+    pub async fn latest_archive_nats() -> String {
+        archive_nats()
+            .await
+            .last()
+            .expect("There must be at least one archive nats")
+            .clone()
+    }
 
     pub async fn archive_nats() -> Vec<String> {
         let default = dotenvy::var("ARCHIVE_NATS_URL").expect("ARCHIVE_NATS_URL must be set");
@@ -39,6 +49,7 @@ pub mod where_are {
             }
         };
 
+        // Sort from oldest to newest
         all_in_cluster.sort_by(|a, b| a.1.cmp(&b.1));
 
         if all_in_cluster.is_empty() {

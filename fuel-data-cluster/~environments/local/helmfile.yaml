@@ -4,15 +4,35 @@ helmDefaults:
   createNamespace: true
 
 releases:
-  - name: archive-nats
-    chart: nats/nats
+  - name: prometheus
+    chart: prometheus-community/kube-prometheus-stack
     values:
-      - ../../archive-nats/charts/values.yaml
+      -  ../../~monitoring/values-prom.yaml
 
+  - name: prometheus-adapter
+    chart: prometheus-community/prometheus-adapter
+    values:
+      -  ../../~monitoring/values-prom-adapter.yaml
+    needs:
+      - prometheus
+
+  - name: keda
+    chart: kedacore/keda
+    values:
+      - ../../~monitoring/values-keda.yaml
+
+  - name: archive-nats
+    chart: ../../archive-nats/chart
+    values:
+      - ../../archive-nats/chart/values.yaml
+    needs:
+      - prometheus
+      - prometheus-adapter
+    
   - name: relay-nats
     chart: nats/nats
     values:
-      - ../../relay-nats/charts/values.yaml
+      - ../../relay-nats/chart/values.yaml
 
   - name: fuel-data-grpc-edge
     chart: ../../fuel-data-grpc-edge/chart

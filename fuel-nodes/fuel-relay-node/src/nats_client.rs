@@ -2,8 +2,6 @@ use std::time::Duration;
 
 use async_nats::ConnectOptions;
 
-use fuel_data_nats::NatsClient;
-
 use fuel_node_publishing::packets::Packet;
 
 pub struct RelayNodeNatsClient {
@@ -36,11 +34,5 @@ impl RelayNodeNatsClient {
         self.client.publish(subject.to_string(), buf.into()).await?;
 
         Ok(())
-    }
-}
-
-impl NatsClient for RelayNodeNatsClient {
-    fn nats_client(&self) -> async_nats::Client {
-        self.client.clone()
     }
 }

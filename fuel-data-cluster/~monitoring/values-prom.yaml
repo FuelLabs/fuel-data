@@ -1,0 +1,50 @@
+prometheus:
+  serviceAccounts:
+    server:
+      create: true
+      name: prometheus-server
+
+  rbac:
+    create: true
+    additionalClusterRoles:
+      - name: node-metrics-access
+        rules:
+          - apiGroups: [""]
+            resources: ["nodes/metrics"]
+            verbs: ["get"]
+
+  # We only show the relevant bits of config that matter
+  prometheusSpec:
+    serviceMonitorSelector: {}
+    # By default, kube-prometheus-stack will discover plenty of metrics.
+    # We'll add an extra job specifically for PVC usage:
+    additionalScrapeConfigs: |
+      - job_name: 'kubelet-pvc-usage'
+        scheme: https
+        metrics_path: /metrics
+        kubernetes_sd_configs:
+          - role: node
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          insecure_skip_verify: true
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__address__]
+            regex: '([^:]+)(?::\d+)?'
+            replacement: '$1:10250'
+            target_label: __address__
+
+alertmanager:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 2Gi
+
+pushgateway:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true

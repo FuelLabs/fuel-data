@@ -1,0 +1,35 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: archive-nats-scaler
+  namespace: fuel-data
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: archive-nats
+  pollingInterval: 30
+  cooldownPeriod: 300
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: "http://prometheus-kube-prometheus-prometheus.fuel-data.svc.cluster.local:9090"
+        metricName: "pvc_disk_usage_percent"
+        query: |
+          (sum(
+            kubelet_volume_stats_used_bytes{
+              namespace="fuel-data",
+              persistentvolumeclaim=~"archive-nats-.*",
+              job="kubelet-pvc-usage"
+            }
+          ) / 
+          sum(
+            kubelet_volume_stats_capacity_bytes{
+              namespace="fuel-data",
+              persistentvolumeclaim=~"archive-nats-.*",
+              job="kubelet-pvc-usage"
+            }
+          )) * 100
+        threshold: "56"

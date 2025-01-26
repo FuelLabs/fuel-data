@@ -1,0 +1,106 @@
+prometheus-adapter:
+  # Point the adapter at your actual Prometheus service
+  prometheus:
+    url: http://prometheus-kube-prometheus-prometheus.fuel-data.svc.cluster.local
+    port: 9090
+    # path: ""  # Typically empty unless your Prometheus is served under a sub-path
+
+  # Enable default aggregator rules (CPU/memory) and add custom PVC usage rule
+  rules:
+    default: true
+    resource: true
+    custom:
+      - seriesQuery: 'kubelet_volume_stats_used_bytes{namespace!="", persistentvolumeclaim!=""}'
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            persistentvolumeclaim: {resource: "persistentvolumeclaim"}
+        name:
+          matches: "kubelet_volume_stats_used_bytes"
+          as: "pvc_disk_usage_bytes"
+        metricsQuery: |
+          sum(kubelet_volume_stats_used_bytes{namespace!="", persistentvolumeclaim="{{ .ResourceName }}", job="kubelet-pvc-usage"})
+          by (namespace, persistentvolumeclaim)
+
+      - seriesQuery: 'kubelet_volume_stats_capacity_bytes{namespace!="", persistentvolumeclaim!=""}'
+        resources:
+          overrides:
+            namespace: {resource: "namespace"}
+            persistentvolumeclaim: {resource: "persistentvolumeclaim"}
+        name:
+          matches: "kubelet_volume_stats_capacity_bytes"
+          as: "pvc_disk_capacity_bytes"
+        metricsQuery: |
+          sum(kubelet_volume_stats_capacity_bytes{namespace!="", persistentvolumeclaim="{{ .ResourceName }}", job="kubelet-pvc-usage"})
+          by (namespace, persistentvolumeclaim)
+          
+  replicas: 1
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    seccompProfile:
+      type: RuntimeDefault
+
+  # Ensures the adapter can serve custom metrics
+  rbac:
+    create: true
+    rules:
+      - apiGroups: ["custom.metrics.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
+      - apiGroups: ["external.metrics.k8s.io"]
+        resources: ["*"]
+        verbs: ["*"]
+      - apiGroups: [""]
+        resources: ["namespaces", "pods", "services"]
+        verbs: ["get", "list", "watch"]
+
+  podSecurityContext:
+    fsGroup: 10001
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: https
+      scheme: HTTPS
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
+
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: https
+      scheme: HTTPS
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+  serviceAccount:
+    create: true
+
+  service:
+    annotations: {}
+    port: 443
+    type: ClusterIP
+
+  podAnnotations: {}
+  podLabels: {}
+
+  tolerations: []
+
+  extraArguments: []
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []

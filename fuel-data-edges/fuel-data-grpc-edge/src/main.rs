@@ -38,12 +38,6 @@ impl EdgeNatsClient {
     }
 }
 
-impl NatsClient for EdgeNatsClient {
-    fn nats_client(&self) -> async_nats::Client {
-        self.client.clone()
-    }
-}
-
 #[derive(Debug, Default)]
 pub struct BlocksStreamer;
 

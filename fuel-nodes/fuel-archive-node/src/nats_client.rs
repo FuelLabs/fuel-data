@@ -6,70 +6,41 @@ use async_nats::{
 };
 use prost::Message;
 
-use fuel_data_nats::NatsClient;
-
 use fuel_node_publishing::{packets::Packet, subjects::SubjectQuery};
 
-pub struct ArchiveNodeNatsClient {
-    client: async_nats::Client,
-    jetstream: jetstream::stream::Stream,
-}
+// TODO: Cache what we can
+// TODO: Add Pooling for NATS connections
+pub struct ArchiveNodeNatsClient;
 
 impl ArchiveNodeNatsClient {
-    pub async fn connect() -> anyhow::Result<Self> {
-        let nats_url = fuel_data_cluster::where_are::archive_nats().await;
-        let nats_url = nats_url.first().unwrap();
-
-        let user = "admin".to_owned();
-        let password = dotenvy::var("ARCHIVE_NATS_ADMIN_PASSWORD")
-            .expect("ARCHIVE_NATS_ADMIN_PASSWORD must be set for admin role");
-
-        let client = ConnectOptions::with_user_and_password(user, password)
-            .connection_timeout(Duration::from_secs(5))
-            .max_reconnects(1)
-            .connect(nats_url)
-            .await?;
-
-        let jetstream = jetstream::new(client.clone());
-        let jetstream = jetstream
-            .get_or_create_stream(jetstream::stream::Config {
-                name: "blocks_stream".to_string(),
-                subjects: vec!["blocks.>".to_string()],
-                ..Default::default()
-            })
-            .await?;
-
-        Ok(Self { client, jetstream })
-    }
-
-    pub async fn publish<T>(&self, Packet { subject, payload }: Packet<T>) -> anyhow::Result<()>
+    pub async fn publish<T>(Packet { subject, payload }: Packet<T>) -> anyhow::Result<()>
     where
         T: prost::Message,
     {
         let mut buf = Vec::with_capacity(payload.encoded_len());
         payload.encode(&mut buf)?;
 
-        self.client.publish(subject.to_string(), buf.into()).await?;
+        Self::client()
+            .await?
+            .publish(subject.to_string(), buf.into())
+            .await?;
 
         Ok(())
     }
 
     pub async fn get_last_published<Query: SubjectQuery>(
-        &self,
         subject_query: &Query,
     ) -> anyhow::Result<Option<Query::DataType>> {
         tracing::info!(
             "Getting last published for {:?}",
             subject_query.to_nats_subject()
         );
-        Ok(self
-            .get_last_published_proto(subject_query)
+        Ok(Self::get_last_published_proto(subject_query)
             .await?
             .map(Query::DataType::from))
     }
 
     pub async fn get_last_published_proto<Query: SubjectQuery>(
-        &self,
         subject_query: &Query,
     ) -> anyhow::Result<Option<Query::DataTypeProto>> {
         tracing::info!(
@@ -77,8 +48,8 @@ impl ArchiveNodeNatsClient {
             subject_query.to_nats_subject()
         );
 
-        let last_published = self
-            .jetstream
+        let last_published = Self::jetstream(&Self::client().await?)
+            .await?
             .get_last_raw_message_by_subject(&subject_query.to_nats_subject())
             .await;
 
@@ -95,10 +66,30 @@ impl ArchiveNodeNatsClient {
             },
         }
     }
-}
 
-impl NatsClient for ArchiveNodeNatsClient {
-    fn nats_client(&self) -> async_nats::Client {
-        self.client.clone()
+    async fn client() -> anyhow::Result<async_nats::Client> {
+        let archive_nats_url = fuel_data_cluster::where_are::latest_archive_nats().await;
+        let user = "admin".to_owned();
+        let password = dotenvy::var("ARCHIVE_NATS_ADMIN_PASSWORD")
+            .expect("ARCHIVE_NATS_ADMIN_PASSWORD must be set for admin role");
+
+        Ok(ConnectOptions::with_user_and_password(user, password)
+            .connection_timeout(Duration::from_secs(5))
+            .max_reconnects(1)
+            .connect(archive_nats_url)
+            .await?)
+    }
+
+    async fn jetstream(client: &async_nats::Client) -> anyhow::Result<jetstream::stream::Stream> {
+        let jetstream = jetstream::new(client.clone());
+        let jetstream = jetstream
+            .get_or_create_stream(jetstream::stream::Config {
+                name: "blocks_stream".to_string(),
+                subjects: vec!["blocks.>".to_string()],
+                ..Default::default()
+            })
+            .await?;
+
+        Ok(jetstream)
     }
 }
