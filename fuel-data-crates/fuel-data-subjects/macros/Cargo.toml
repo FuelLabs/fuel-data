@@ -1,0 +1,20 @@
+[package]
+name = "fuel-data-subjects-macros"
+description = "Deive macros for fuel-data's Subjects and SubjectFilter (aka Topcis and TopicFilters re-usabled in Kafka, RabbitMQ, etc)"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = { version = "2.0", features = ["full"] }
+quote = "1.0"
+proc-macro2 = "1.0"
+proc-macro-error = "1.0.4"

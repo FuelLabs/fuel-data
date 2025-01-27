@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy workspace Cargo.toml and member manifests
 COPY Cargo.toml Cargo.lock ./
-COPY fuel-data-crates/fuel-data-nats/Cargo.toml fuel-data-crates/fuel-data-nats/
+COPY fuel-data-crates/fuel-data-subjects/Cargo.toml fuel-data-crates/fuel-data-subjects/
 COPY fuel-data-crates/fuel-data-types/Cargo.toml fuel-data-crates/fuel-data-types/
 COPY fuel-data-edges/fuel-data-edge/Cargo.toml fuel-data-edges/fuel-data-edge/
 COPY fuel-data-edges/fuel-data-grpc-edge/Cargo.toml fuel-data-edges/fuel-data-grpc-edge/

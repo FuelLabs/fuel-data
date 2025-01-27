@@ -1,6 +1,9 @@
 use std::sync::Arc;
 use std::time::Duration;
 
+use fuel_data_subjects::BlocksSubjectFilter;
+use fuel_data_subjects::Filter;
+
 use futures::{StreamExt, TryStreamExt};
 
 use crate::nats_client::ArchiveNodeNatsClient;
@@ -13,8 +16,6 @@ use fuel_data_types::*;
 use fuel_node::types::*;
 
 use fuel_node::FuelNodeLike;
-use fuel_node_publishing::subjects::BlocksSubjectQuery;
-use fuel_node_publishing::subjects::Query;
 
 pub struct ArchiveNode {
     pub fuel_core: Arc<dyn FuelNodeLike>,
@@ -29,9 +30,9 @@ impl ArchiveNode {
 
     async fn get_last_published_block_height(&self) -> anyhow::Result<u32> {
         Ok(
-            ArchiveNodeNatsClient::get_last_published(&BlocksSubjectQuery {
-                producer: Query::All,
-                block_height: Query::All,
+            ArchiveNodeNatsClient::get_last_published(&BlocksSubjectFilter {
+                producer: Filter::All,
+                block_height: Filter::All,
             })
             .await?
             .map(|block| block.height)

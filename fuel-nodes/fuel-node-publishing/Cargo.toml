@@ -15,5 +15,6 @@ path = "src/lib.rs"
 
 [dependencies]
 fuel-node = { workspace = true }
+fuel-data-subjects = { workspace = true }
 fuel-data-types = { workspace = true }
 prost = { workspace = true }

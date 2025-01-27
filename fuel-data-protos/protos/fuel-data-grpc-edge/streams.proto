@@ -11,5 +11,5 @@ service BlocksStream {
 }
 
 message BlocksStreamRequest {
-  fuel_data_edge.filters.BlocksFilter filter = 2;
+  fuel_data_edge.filters.BlocksFilterProto filter = 2;
 }

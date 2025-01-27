@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package fuel_data_edge.filters;
 
-message BlocksFilter {
+message BlocksFilterProto {
   optional uint32 from = 1;
   optional uint32 to = 2;
-  optional uint32 producer = 3;
+  optional string producer = 3;
   optional uint32 take = 4;
   optional uint32 chunk = 5;
 }

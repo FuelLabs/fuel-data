@@ -4,16 +4,22 @@ use async_nats::{
     jetstream::{self, stream::LastRawMessageErrorKind},
     ConnectOptions,
 };
+use fuel_data_subjects::SubjectFilter;
 use prost::Message;
 
-use fuel_node_publishing::{packets::Packet, subjects::SubjectQuery};
+use fuel_node_publishing::packets::Packet;
 
 // TODO: Cache what we can
 // TODO: Add Pooling for NATS connections
 pub struct ArchiveNodeNatsClient;
 
 impl ArchiveNodeNatsClient {
-    pub async fn publish<T>(Packet { subject, payload }: Packet<T>) -> anyhow::Result<()>
+    pub async fn publish<T>(
+        Packet {
+            nats_subject,
+            payload,
+        }: Packet<T>,
+    ) -> anyhow::Result<()>
     where
         T: prost::Message,
     {
@@ -22,40 +28,36 @@ impl ArchiveNodeNatsClient {
 
         Self::client()
             .await?
-            .publish(subject.to_string(), buf.into())
+            .publish(nats_subject, buf.into())
             .await?;
 
         Ok(())
     }
 
-    pub async fn get_last_published<Query: SubjectQuery>(
-        subject_query: &Query,
-    ) -> anyhow::Result<Option<Query::DataType>> {
-        tracing::info!(
-            "Getting last published for {:?}",
-            subject_query.to_nats_subject()
-        );
-        Ok(Self::get_last_published_proto(subject_query)
+    pub async fn get_last_published<Filter: SubjectFilter>(
+        subject_filter: &Filter,
+    ) -> anyhow::Result<Option<Filter::DataType>> {
+        Ok(Self::get_last_published_proto(subject_filter)
             .await?
-            .map(Query::DataType::from))
+            .map(Filter::DataType::from))
     }
 
-    pub async fn get_last_published_proto<Query: SubjectQuery>(
-        subject_query: &Query,
-    ) -> anyhow::Result<Option<Query::DataTypeProto>> {
+    pub async fn get_last_published_proto<Filter: SubjectFilter>(
+        subject_filter: &Filter,
+    ) -> anyhow::Result<Option<Filter::DataTypeProto>> {
         tracing::info!(
             "Getting last published proto for {:?}",
-            subject_query.to_nats_subject()
+            subject_filter.to_nats_subject_filter()
         );
 
         let last_published = Self::jetstream(&Self::client().await?)
             .await?
-            .get_last_raw_message_by_subject(&subject_query.to_nats_subject())
+            .get_last_raw_message_by_subject(&subject_filter.to_nats_subject_filter())
             .await;
 
         match last_published {
             Ok(message) => {
-                let last_published_proto = Query::DataTypeProto::decode(message.payload)
+                let last_published_proto = Filter::DataTypeProto::decode(message.payload)
                     .expect("DataTypeProto should always decode");
 
                 Ok(Some(last_published_proto))

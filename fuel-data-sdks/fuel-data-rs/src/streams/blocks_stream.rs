@@ -1,29 +1,42 @@
+use fuel_data_protos::fuel_data_edge::filters::BlocksFilterProto;
 use fuel_data_protos::fuel_data_grpc_edge::streams::blocks_stream_client::BlocksStreamClient;
 use fuel_data_protos::fuel_data_grpc_edge::streams::BlocksStreamRequest;
 use fuel_data_types::{Address, Block};
 use tokio_stream::{Stream, StreamExt};
 
 use crate::edge::FuelDataEdge;
-use crate::errors::{FuelDataError, GrpcConnectionError};
+use crate::errors::{FuelDataError, GrpcConnectionError, StreamFilterError};
 
 #[derive(Debug, Clone, Default)]
-pub struct BlocksStream {
-    from: Option<u64>,
-    to: Option<u64>,
+pub struct BlocksFilter {
+    from: Option<u32>,
+    to: Option<u32>,
     producer: Option<Address>,
     take: Option<u16>,
     chunk: Option<u16>,
 }
 
-impl BlocksStream {
+impl Into<BlocksFilterProto> for BlocksFilter {
+    fn into(self) -> BlocksFilterProto {
+        BlocksFilterProto {
+            from: self.from,
+            to: self.to,
+            producer: self.producer.map(|a| a.to_string()),
+            take: self.take.map(Into::into),
+            chunk: self.chunk.map(Into::into),
+        }
+    }
+}
+
+impl BlocksFilter {
     pub fn new() -> Self {
         Self::default()
     }
-    pub fn from(mut self, value: u64) -> Self {
+    pub fn from(mut self, value: u32) -> Self {
         self.from = Some(value);
         self
     }
-    pub fn to(mut self, value: u64) -> Self {
+    pub fn to(mut self, value: u32) -> Self {
         self.to = Some(value);
         self
     }
@@ -44,10 +57,17 @@ impl BlocksStream {
         self,
         edge: &FuelDataEdge,
     ) -> Result<impl Stream<Item = Result<Block, FuelDataError>>, FuelDataError> {
-        // TODO: Validate the filter
-        // TODO: Extract query from filter
+        if self.from > self.to {
+            return Err(StreamFilterError::InvalidFilter(
+                "Invalid filter: 'from' must be less than 'to'".to_string(),
+            ))?;
+        }
 
-        let grpc_request = BlocksStreamRequest::default();
+        let filter_proto: BlocksFilterProto = self.into();
+        let grpc_request = BlocksStreamRequest {
+            filter: Some(filter_proto),
+        };
+
         let mut connection = BlocksStreamClient::connect(edge.grpc_endpoint.clone())
             .await
             .map_err(GrpcConnectionError::from)?;
@@ -58,13 +78,12 @@ impl BlocksStream {
             .map_err(FuelDataError::from)?
             .into_inner();
 
-        // Map the gRPC stream to a stream of `Result<Block, FuelDataError>`
         let stream = tonic_stream.map(|item| {
             item.map(|stream_item_proto| {
                 let stream_item: Block = stream_item_proto.into();
                 stream_item
             })
-            .map_err(FuelDataError::from) // Convert `Status` to `FuelDataError`
+            .map_err(FuelDataError::from)
         });
 
         Ok(stream)

@@ -34,7 +34,7 @@ fuel-core-types = { workspace = true }
 fuel-node = { workspace = true }
 fuel-node-publishing = { workspace = true }
 
-fuel-data-nats = { workspace = true }
+fuel-data-subjects = { workspace = true }
 fuel-data-types = { workspace = true }
 fuel-data-cluster = { workspace = true }
 futures = { workspace = true }

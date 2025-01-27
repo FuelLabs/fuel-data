@@ -24,14 +24,22 @@ impl RelayNodeNatsClient {
         Ok(Self { client })
     }
 
-    pub async fn publish<T>(&self, Packet { subject, payload }: Packet<T>) -> anyhow::Result<()>
+    pub async fn publish<T>(
+        &self,
+        Packet {
+            nats_subject,
+            payload,
+        }: Packet<T>,
+    ) -> anyhow::Result<()>
     where
         T: prost::Message,
     {
         let mut buf = Vec::with_capacity(payload.encoded_len());
         payload.encode(&mut buf)?;
 
-        self.client.publish(subject.to_string(), buf.into()).await?;
+        self.client
+            .publish(nats_subject.to_string(), buf.into())
+            .await?;
 
         Ok(())
     }

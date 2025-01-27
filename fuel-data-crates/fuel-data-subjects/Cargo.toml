@@ -1,5 +1,5 @@
 [package]
-name = "fuel-data-nats"
+name = "fuel-data-subjects"
 description = "All NATS related logic for fuel-data"
 authors = { workspace = true }
 keywords = { workspace = true }
@@ -19,7 +19,10 @@ anyhow = { workspace = true }
 async-nats = { workspace = true }
 displaydoc = { workspace = true }
 dotenvy = { workspace = true }
+fuel-data-types = { workspace = true }
+fuel-data-subjects-macros = { path = "./macros" }
 rand = { workspace = true }
+prost = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
 

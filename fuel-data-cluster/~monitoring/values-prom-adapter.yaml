@@ -1,11 +1,9 @@
 prometheus-adapter:
-  # Point the adapter at your actual Prometheus service
   prometheus:
     url: http://prometheus-kube-prometheus-prometheus.fuel-data.svc.cluster.local
     port: 9090
-    # path: ""  # Typically empty unless your Prometheus is served under a sub-path
+    # path: ""  # Typically empty unless we serve Prometheus under a sub-path
 
-  # Enable default aggregator rules (CPU/memory) and add custom PVC usage rule
   rules:
     default: true
     resource: true

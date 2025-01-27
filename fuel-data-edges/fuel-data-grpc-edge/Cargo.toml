@@ -23,5 +23,5 @@ tonic = "0.12"
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 fuel-data-protos = { workspace = true, features = ["fuel-data-grpc-edge"] }
 fuel-data-cluster = { workspace = true }
-fuel-data-nats = { workspace = true }
+fuel-data-subjects = { workspace = true }
 tokio-stream = { workspace = true }
