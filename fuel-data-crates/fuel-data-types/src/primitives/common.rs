@@ -61,11 +61,7 @@ macro_rules! common_wrapper_type {
         impl From<&str> for $wrapper_type {
             fn from(s: &str) -> Self {
                 s.parse().unwrap_or_else(|e| {
-                    panic!(
-                        "Failed to parse {}: {}",
-                        stringify!($wrapper_type),
-                        e
-                    )
+                    panic!("Failed to parse {}: {}", stringify!($wrapper_type), e)
                 })
             }
         }
@@ -125,9 +121,8 @@ macro_rules! generate_byte_type_wrapper {
                         std::mem::size_of::<$inner_type>() * 2
                     ));
                 }
-                let bytes = hex::decode(s).map_err(|e| {
-                    format!("Failed to decode hex string: {}", e)
-                })?;
+                let bytes =
+                    hex::decode(s).map_err(|e| format!("Failed to decode hex string: {}", e))?;
                 let array: [u8; $byte_size] = bytes
                     .try_into()
                     .map_err(|_| "Invalid byte length".to_string())?;
@@ -150,9 +145,8 @@ macro_rules! generate_byte_type_wrapper {
             type Err = String;
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 let s = s.strip_prefix("0x").unwrap_or(s);
-                let bytes = hex::decode(s).map_err(|e| {
-                    format!("Failed to decode hex string: {}", e)
-                })?;
+                let bytes =
+                    hex::decode(s).map_err(|e| format!("Failed to decode hex string: {}", e))?;
                 Ok($wrapper_type(bytes.into()))
             }
         }

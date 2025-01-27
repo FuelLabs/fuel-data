@@ -70,7 +70,7 @@ impl ArchiveNodeNatsClient {
     }
 
     async fn client() -> anyhow::Result<async_nats::Client> {
-        let archive_nats_url = fuel_data_cluster::where_are::latest_archive_nats().await;
+        let archive_nats_url = fuel_data_cluster::where_is::latest_archive_nats().await;
         let user = "admin".to_owned();
         let password = dotenvy::var("ARCHIVE_NATS_ADMIN_PASSWORD")
             .expect("ARCHIVE_NATS_ADMIN_PASSWORD must be set for admin role");

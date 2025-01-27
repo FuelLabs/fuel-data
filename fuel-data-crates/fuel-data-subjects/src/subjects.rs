@@ -13,6 +13,15 @@ pub enum Filter<T> {
     Only(T),
 }
 
+impl<T> From<Option<T>> for Filter<T> {
+    fn from(value: Option<T>) -> Self {
+        match value {
+            Some(value) => Filter::Only(value),
+            None => Filter::All,
+        }
+    }
+}
+
 impl<T> Filter<T> {
     pub fn as_ref(&self) -> Option<&T> {
         match self {

@@ -13,7 +13,6 @@ pub struct BlocksFilter {
     to: Option<u32>,
     producer: Option<Address>,
     take: Option<u16>,
-    chunk: Option<u16>,
 }
 
 impl Into<BlocksFilterProto> for BlocksFilter {
@@ -23,7 +22,8 @@ impl Into<BlocksFilterProto> for BlocksFilter {
             to: self.to,
             producer: self.producer.map(|a| a.to_string()),
             take: self.take.map(Into::into),
-            chunk: self.chunk.map(Into::into),
+            // TODO: Support chunking in newer versions
+            ..Default::default()
         }
     }
 }
@@ -46,10 +46,6 @@ impl BlocksFilter {
     }
     pub fn take(mut self, count: u16) -> Self {
         self.take = Some(count);
-        self
-    }
-    pub fn chunk(mut self, count: u16) -> Self {
-        self.chunk = Some(count);
         self
     }
 

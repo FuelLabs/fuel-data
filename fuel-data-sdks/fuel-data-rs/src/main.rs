@@ -15,7 +15,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut blocks_stream = BlocksStream::new()
         .from(0)
-        .chunk(2)
         .take(4)
         .stream(&fuel_data_edge)
         .await?;

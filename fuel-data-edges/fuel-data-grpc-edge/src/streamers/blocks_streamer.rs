@@ -1,17 +1,20 @@
 use std::pin::Pin;
 
+use fuel_data_subjects::BlocksSubjectFilter;
 use tonic::{Request, Response, Status};
 
-use fuel_data_protos::fuel_data_grpc_edge::streams::blocks_stream_server::BlocksStream;
 use fuel_data_protos::fuel_data_grpc_edge::streams::BlocksStreamRequest;
 use fuel_data_protos::fuel_data_types::BlockProto;
+use fuel_data_protos::{
+    fuel_data_edge::filters::BlocksFilterProto,
+    fuel_data_grpc_edge::streams::blocks_stream_server::BlocksStream,
+};
 
-use tokio::sync::mpsc;
-use tokio_stream::{wrappers::ReceiverStream, Stream, StreamExt};
+use tokio_stream::{Stream, StreamExt};
 
 use prost::Message;
 
-use crate::EdgeNatsClient;
+use fuel_data_edge::EdgeNatsClient;
 
 #[derive(Debug, Default)]
 pub struct BlocksStreamer;
@@ -26,56 +29,45 @@ impl BlocksStream for BlocksStreamer {
     ) -> Result<Response<Self::GetStream>, Status> {
         println!("\tclient connected from: {:?}", request.remote_addr());
 
-        let filter = request.into_inner().filter;
+        let request_filter = request.into_inner().filter;
 
-        let subject = filter
-            .map(|filter| {
-                let from_block_height = filter
-                    .from
-                    .map(|f| f.to_string())
-                    .unwrap_or("*".to_string());
-                let producer = filter
-                    .producer
-                    .map(|f| f.to_string())
-                    .unwrap_or("*".to_string());
-
-                format!("blocks.{}.{}", from_block_height, producer)
-            })
-            .unwrap_or("blocks.*.*".to_string());
-        println!("\trequested subject: {}", subject);
-
-        let nats_client = EdgeNatsClient::connect()
-            .await
-            .expect("NATS Client connection failed");
-
-        let mut subscription = nats_client
-            .client
-            .subscribe(subject)
-            .await
-            .expect("All subjects must yield valid subscriptions");
-
-        let (tx, rx) = mpsc::channel(128);
-        tokio::spawn(async move {
-            while let Some(item) = subscription.next().await {
-                println!("\tBlock received");
-                println!("Subject{}", &item.subject);
-                let block = BlockProto::decode(item.payload).expect("must decode block");
-                println!("Block{}", &(serde_json::to_string(&block).unwrap()));
-
-                match tx.send(Result::<_, Status>::Ok(block)).await {
-                    Ok(_) => {
-                        // item (server response) was queued to be send to client
-                    }
-                    Err(_item) => {
-                        // output_stream was built from rx and both are dropped
-                        break;
-                    }
-                }
+        let subject_filter = if let Some(BlocksFilterProto { producer, from, .. }) = &request_filter
+        {
+            BlocksSubjectFilter {
+                producer: producer.as_ref().map(|p| p.as_str().into()).into(),
+                block_height: from.as_ref().map(|bh| *bh).into(),
             }
-            println!("\tclient disconnected");
-        });
+        } else {
+            BlocksSubjectFilter::default()
+        };
 
-        let output_stream = ReceiverStream::new(rx);
-        Ok(Response::new(Box::pin(output_stream) as Self::GetStream))
+        let maybe_to = request_filter.as_ref().and_then(|f| f.to);
+        let take = request_filter
+            .as_ref()
+            .and_then(|f| f.take)
+            .unwrap_or(u64::MAX);
+
+        let stream = EdgeNatsClient::subscribe(subject_filter)
+            .await
+            .expect("All subjects must yield valid subscriptions")
+            .map(|subscription_result| match subscription_result {
+                Ok(nats_message) => {
+                    println!("Streaming Subject:{}", &nats_message.subject);
+
+                    Ok(BlockProto::decode(nats_message.payload).expect("must decode block"))
+                }
+                // TODO: Bubble up error variants appropriately
+                Err(_) => Err(Status::internal("message")),
+            })
+            .take_while(
+                move |subscription_result| match (subscription_result, maybe_to) {
+                    (Ok(block_proto), Some(to_value)) => block_proto.height <= to_value,
+                    (Err(_), _) => false,
+                    _ => true,
+                },
+            )
+            .take(take as usize);
+
+        Ok(Response::new(Box::pin(stream) as Self::GetStream))
     }
 }

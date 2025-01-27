@@ -107,6 +107,14 @@ pub fn derive_subject_filter(input: TokenStream) -> TokenStream {
                 )
             }
         }
+
+        impl Default for #struct_name {
+            fn default() -> Self {
+                Self {
+                    #(#fields: Filter::All,)*
+                }
+            }
+        }
     }
     .into()
 }
